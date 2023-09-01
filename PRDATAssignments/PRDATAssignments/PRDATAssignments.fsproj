@@ -8,6 +8,7 @@
     <ItemGroup>
         <Compile Include="Assignment01\Intro2.fs" />
         <Compile Include="Assignment01\SimpleExpr.cs.fs" />
+        <Compile Include="Assignment01\Intcomp1.fs" />
     </ItemGroup>
 
 </Project>
