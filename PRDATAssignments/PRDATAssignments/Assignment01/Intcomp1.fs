@@ -1,4 +1,4 @@
-(* Programming language concepts for software developers, 2012-02-17 *)
+ (* Programming language concepts for software developers, 2012-02-17 *)
 
 (* Evaluation, checking, and compilation of object language expressions *)
 (* Stack machines for expression evaluation                             *) 
@@ -231,9 +231,9 @@ let testFreeVars = Let ([("x1", Prim( "+", CstI 5, CstI 7)); ("x2", Prim( "*", V
 let printFreeVars = freevars testFreeVars
 
 (* Alternative definition of closed *)
-(*
+
 let closed2 e = (freevars e = []);;
-let _ = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
+//let _ = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
 
 (* ---------------------------------------------------------------------- *)
 
@@ -260,9 +260,12 @@ let rec tcomp (e : expr) (cenv : string list) : texpr =
     match e with
     | CstI i -> TCstI i
     | Var x  -> TVar (getindex cenv x)
-    | Let(x, erhs, ebody) -> 
-      let cenv1 = x :: cenv 
-      TLet(tcomp erhs cenv, tcomp ebody cenv1)
+    | Let(lst, exp) ->
+        match lst with
+        | (s, ex) :: xs ->
+            let newEnv = s :: cenv
+            TLet(tcomp ex cenv, tcomp (Let(xs, exp)) newEnv)
+        | [] -> tcomp exp cenv
     | Prim(ope, e1, e2) -> TPrim(ope, tcomp e1 cenv, tcomp e2 cenv);;
 
 (* Evaluation of target expressions with variable indexes.  The
@@ -360,6 +363,7 @@ let rec seval (inss : sinstr list) (stack : int list) =
 (* A compile-time variable environment representing the state of
    the run-time stack. *)
 
+(*
 type stackvalue =
   | Value                               (* A computed value *)
   | Bound of string;;                   (* A bound variable *)
@@ -379,11 +383,14 @@ let rec scomp (e : expr) (cenv : stackvalue list) : sinstr list =
     | Prim("*", e1, e2) -> 
           scomp e1 cenv @ scomp e2 (Value :: cenv) @ [SMul] 
     | Prim _ -> failwith "scomp: unknown operator";;
+    *)
 
+(*
 let s1 = scomp e1 [];;
 let s2 = scomp e2 [];;
 let s3 = scomp e3 [];;
 let s5 = scomp e5 [];;
+*)
 
 (* Output the integers in list inss to the text file called fname: *)
 
@@ -392,4 +399,4 @@ let intsToFile (inss : int list) (fname : string) =
     System.IO.File.WriteAllText(fname, text);;
 
 (* -----------------------------------------------------------------  *)
-*)
+
