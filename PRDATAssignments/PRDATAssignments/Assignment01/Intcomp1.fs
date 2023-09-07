@@ -4,40 +4,38 @@
 (* Stack machines for expression evaluation                             *) 
 
 (* Object language expressions with variable bindings and nested scope *)
-
-open System.Security.Cryptography
+module IntComp1
 
 type expr = 
   | CstI of int
   | Var of string
-  | Let of (string * expr) list * expr
+  | Let of (string * expr) list * expr //FartCity: updated Let
   | Prim of string * expr * expr;;
 
 (* Some closed expressions: *)
-(*
-let e1 = Let("z", CstI 17, Prim("+", Var "z", Var "z"));;
 
-let e2 = Let("z", CstI 17, 
-             Prim("+", Let("z", CstI 22, Prim("*", CstI 100, Var "z")),
+let e1 = Let(["z", CstI 17], Prim("+", Var "z", Var "z"));;
+
+let e2 = Let(["z", CstI 17], 
+             Prim("+", Let(["z", CstI 22], Prim("*", CstI 100, Var "z")),
                        Var "z"));;
 
-let e3 = Let("z", Prim("-", CstI 5, CstI 4), 
+let e3 = Let(["z", Prim("-", CstI 5, CstI 4)], 
              Prim("*", CstI 100, Var "z"));;
 
-let e4 = Prim("+", Prim("+", CstI 20, Let("z", CstI 17, 
+let e4 = Prim("+", Prim("+", CstI 20, Let(["z", CstI 17], 
                                           Prim("+", Var "z", CstI 2))),
                    CstI 30);;
 
-let e5 = Prim("*", CstI 2, Let("x", CstI 3, Prim("+", Var "x", CstI 4)));;
+let e5 = Prim("*", CstI 2, Let(["x", CstI 3], Prim("+", Var "x", CstI 4)));;
 
-let e6 = Let("z", Var "x", Prim("+", Var "z", Var "x"))
-let e7 = Let("z", CstI 3, Let("y", Prim("+", Var "z", CstI 1), Prim("+", Var "z", Var "y")))
-let e8 = Let("z", Let("x", CstI 4, Prim("+", Var "x", CstI 5)), Prim("*", Var "z", CstI 2))
-let e9 = Let("z", CstI 3, Let("y", Prim("+", Var "z", CstI 1), Prim("+", Var "x", Var "y")))
-let e10 = Let("z", Prim("+", Let("x", CstI 4, Prim("+", Var "x", CstI 5)), Var "x"), Prim("*", Var "z", CstI 2))
+let e6 = Let(["z", Var "x"], Prim("+", Var "z", Var "x"))
+let e7 = Let(["z", CstI 3], Let(["y", Prim("+", Var "z", CstI 1)], Prim("+", Var "z", Var "y")))
+let e8 = Let(["z", Let(["x", CstI 4], Prim("+", Var "x", CstI 5))], Prim("*", Var "z", CstI 2))
+let e9 = Let(["z", CstI 3], Let(["y", Prim("+", Var "z", CstI 1)], Prim("+", Var "x", Var "y")))
+let e10 = Let(["z", Prim("+", Let(["x", CstI 4], Prim("+", Var "x", CstI 5)), Var "x")], Prim("*", Var "z", CstI 2))
 
 (* ---------------------------------------------------------------------- *)
-*)
 (* Evaluation of expressions with variables and bindings *)
 
 let rec lookup env x =
@@ -45,6 +43,8 @@ let rec lookup env x =
     | []        -> failwith (x + " not found")
     | (y, v)::r -> if x=y then v else lookup r x;;
 
+
+//FartCity: Eval matches new Let
 let rec eval e (env : (string * int) list) : int =
     match e with
     | CstI i            -> i
@@ -60,20 +60,17 @@ let rec eval e (env : (string * int) list) : int =
     | Prim("-", e1, e2) -> eval e1 env - eval e2 env
     | Prim _            -> failwith "unknown primitive";;
 
-(*
 let run e = eval e [];;
 let res = List.map run [e1;e2;e3;e4;e5;e7]  (* e6 has free variables *)
-*)
+
 let testEval = Let ([("x1", Prim( "+", CstI 5, CstI 7)); ("x2", Prim( "*", Var "x1", CstI 2))], (Prim("+", Var "x1", Var "x2")))
 let test = eval testEval []
-
 
 (* ---------------------------------------------------------------------- *)
 
 (* Closedness *)
 
-// let mem x vs = List.exists (fun y -> x=y) vs;;
-
+let mem x vs = List.exists (fun y -> x=y) vs;;
 let rec mem x vs = 
     match vs with
     | []      -> false
@@ -81,7 +78,6 @@ let rec mem x vs =
 
 (* Checking whether an expression is closed.  The vs is 
    a list of the bound variables.  *)
-
 
 (*
 let rec closedin (e : expr) (vs : string list) : bool =
@@ -92,11 +88,11 @@ let rec closedin (e : expr) (vs : string list) : bool =
       let vs1 = x :: vs 
       closedin erhs vs && closedin ebody vs1
     | Prim(ope, e1, e2) -> closedin e1 vs && closedin e2 vs;;
-
+*)
 (* An expression is closed if it is closed in the empty environment *)
 
-let closed1 e = closedin e [];;
-let _ = List.map closed1 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
+//let closed1 e = closedin e [];;
+//let _ = List.map closed1 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
 
 (* ---------------------------------------------------------------------- *)
 
@@ -118,7 +114,7 @@ let rec remove env x =
     | (y, e)::r -> if x=y then r else (y, e) :: remove r x;;
 
 (* Naive substitution, may capture free variables: *)
-
+(*
 let rec nsubst (e : expr) (env : (string * expr) list) : expr =
     match e with
     | CstI i -> e
@@ -137,25 +133,24 @@ let e6s1 = nsubst e6 [("z", CstI 17)];;
 let e6s2 = nsubst e6 [("z", Prim("-", CstI 5, CstI 4))];;
 
 let e6s3 = nsubst e6 [("z", Prim("+", Var "z", Var "z"))];;
-
+*)
 // Shows that only z outside the Let gets substituted:
-let e7 = Prim("+", Let("z", CstI 22, Prim("*", CstI 5, Var "z")),
-                   Var "z");;
+let e7 = Prim("+", Let(["z", CstI 22], Prim("*", CstI 5, Var "z")), Var "z");;
 
-let e7s1 = nsubst e7 [("z", CstI 100)];;
+//let e7s1 = nsubst e7 [("z", CstI 100)];;
 
 // Shows that only the z in the Let rhs gets substituted
-let e8 = Let("z", Prim("*", CstI 22, Var "z"), Prim("*", CstI 5, Var "z"));;
+let e8 = Let(["z", Prim("*", CstI 22, Var "z")], Prim("*", CstI 5, Var "z"));;
 
-let e8s1 = nsubst e8 [("z", CstI 100)];;
+//let e8s1 = nsubst e8 [("z", CstI 100)];;
 
 // Shows (wrong) capture of free variable z under the let:
-let e9 = Let("z", CstI 22, Prim("*", Var "y", Var "z"));;
+let e9 = Let(["z", CstI 22], Prim("*", Var "y", Var "z"));;
 
-let e9s1 = nsubst e9 [("y", Var "z")];;
+//let e9s1 = nsubst e9 [("y", Var "z")];;
 
-// 
-let e9s2 = nsubst e9 [("z", Prim("-", CstI 5, CstI 4))];;
+
+//let e9s2 = nsubst e9 [("z", Prim("-", CstI 5, CstI 4))];;
 
 let newVar : string -> string = 
     let n = ref 0
@@ -163,7 +158,7 @@ let newVar : string -> string =
     varMaker
 
 (* Correct, capture-avoiding substitution *)
-
+(*
 let rec subst (e : expr) (env : (string * expr) list) : expr =
     match e with
     | CstI i -> e
@@ -189,9 +184,9 @@ let e8s1a = subst e8 [("z", CstI 100)];;
 
 // Shows renaming of bound variable z (to z3), avoiding capture of free z
 let e9s1a = subst e9 [("y", Var "z")];;
-
-(* ---------------------------------------------------------------------- *)
 *)
+(* ---------------------------------------------------------------------- *)
+
 (* Free variables *)
 
 (* Operations on sets, represented as lists.  Simple but inefficient;
@@ -207,7 +202,6 @@ let rec union (xs, ys) =
                else x :: union(xr, ys);;
 
 (* minus xs ys  is the set of all elements in xs but not in ys *)
-
 let rec minus (xs, ys) = 
     match xs with 
     | []    -> []
@@ -216,6 +210,7 @@ let rec minus (xs, ys) =
 
 (* Find all variables that occur free in expression e *)
 
+//FartCity: matching Let 
 let rec freevars e : string list =
     match e with
     | CstI i -> []
@@ -233,7 +228,7 @@ let printFreeVars = freevars testFreeVars
 (* Alternative definition of closed *)
 
 let closed2 e = (freevars e = []);;
-//let _ = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
+let _ = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
 
 (* ---------------------------------------------------------------------- *)
 
@@ -256,6 +251,7 @@ let rec getindex vs x =
 
 (* Compiling from expr to texpr *)
 
+//FartCity: matching Let
 let rec tcomp (e : expr) (cenv : string list) : texpr =
     match e with
     | CstI i -> TCstI i
@@ -271,6 +267,7 @@ let rec tcomp (e : expr) (cenv : string list) : texpr =
 (* Evaluation of target expressions with variable indexes.  The
    run-time environment renv is a list of variable values (ints).  *)
 
+//FartCity: matching Let
 let rec teval (e : texpr) (renv : int list) : int =
     match e with
     | TCstI i -> i
@@ -333,8 +330,6 @@ let rec rcomp (e : expr) : rinstr list =
     | Prim _            -> failwith "unknown primitive";;
             
 (* Correctness: eval e []  equals  reval (rcomp e) [] *)
-
-
 (* Storing intermediate results and variable bindings in the same stack *)
 
 type sinstr =
@@ -363,13 +358,14 @@ let rec seval (inss : sinstr list) (stack : int list) =
 (* A compile-time variable environment representing the state of
    the run-time stack. *)
 
-(*
+
 type stackvalue =
   | Value                               (* A computed value *)
   | Bound of string;;                   (* A bound variable *)
 
 (* Compilation to a list of instructions for a unified-stack machine *)
 
+(*
 let rec scomp (e : expr) (cenv : stackvalue list) : sinstr list =
     match e with
     | CstI i -> [SCstI i]
@@ -383,8 +379,7 @@ let rec scomp (e : expr) (cenv : stackvalue list) : sinstr list =
     | Prim("*", e1, e2) -> 
           scomp e1 cenv @ scomp e2 (Value :: cenv) @ [SMul] 
     | Prim _ -> failwith "scomp: unknown operator";;
-    *)
-
+*)
 (*
 let s1 = scomp e1 [];;
 let s2 = scomp e2 [];;
@@ -393,7 +388,6 @@ let s5 = scomp e5 [];;
 *)
 
 (* Output the integers in list inss to the text file called fname: *)
-
 let intsToFile (inss : int list) (fname : string) = 
     let text = String.concat " " (List.map string inss)
     System.IO.File.WriteAllText(fname, text);;

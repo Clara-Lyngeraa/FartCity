@@ -5,11 +5,10 @@
 //module Intro2
 
 (* Association lists map object language variables to their values *)
+module Intro2
 
 open System.Formats.Asn1
-
 let env = [("a", 3); ("c", 78); ("baf", 666); ("b", 111)];;
-
 let emptyenv = []; (* the empty environment *)
 
 let rec lookup env x =
