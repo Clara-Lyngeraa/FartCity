@@ -15,6 +15,7 @@ type expr =
 
 (* Some closed expressions: *)
 
+
 let e1 = Let("z", CstI 17, Prim("+", Var "z", Var "z"));;
 
 let e2 = Let("z", CstI 17, 
@@ -122,7 +123,7 @@ let rec nsubst (e : expr) (env : (string * expr) list) : expr =
 
 (* Some expressions with free variables: *)
 
-let e6 = Prim("+", Var "y", Var "z");;
+//let e6 = Prim("+", Var "y", Var "z");;
 
 let e6s1 = nsubst e6 [("z", CstI 17)];;
 
@@ -131,18 +132,17 @@ let e6s2 = nsubst e6 [("z", Prim("-", CstI 5, CstI 4))];;
 let e6s3 = nsubst e6 [("z", Prim("+", Var "z", Var "z"))];;
 
 // Shows that only z outside the Let gets substituted:
-let e7 = Prim("+", Let("z", CstI 22, Prim("*", CstI 5, Var "z")),
-                   Var "z");;
+//let e7 = Prim("+", Let("z", CstI 22, Prim("*", CstI 5, Var "z")),Var "z");;
 
 let e7s1 = nsubst e7 [("z", CstI 100)];;
 
 // Shows that only the z in the Let rhs gets substituted
-let e8 = Let("z", Prim("*", CstI 22, Var "z"), Prim("*", CstI 5, Var "z"));;
+//let e8 = Let("z", Prim("*", CstI 22, Var "z"), Prim("*", CstI 5, Var "z"));;
 
 let e8s1 = nsubst e8 [("z", CstI 100)];;
 
 // Shows (wrong) capture of free variable z under the let:
-let e9 = Let("z", CstI 22, Prim("*", Var "y", Var "z"));;
+//let e9 = Let("z", CstI 22, Prim("*", Var "y", Var "z"));;
 
 let e9s1 = nsubst e9 [("y", Var "z")];;
 
@@ -381,20 +381,20 @@ let intsToFile (inss : int list) (fname : string) =
 
 //FartCity assignment02
 
-//exercise 3.4
-let assemble (lst: sinstr list) : int list =
-    let rec aux lst acc =
-        match lst with
-        |x::xs -> match x with
-                  | SCstI i -> aux xs (0 :: i :: acc)                    (* push integer           *)
-                  | SVar v  -> aux xs (1 :: v :: acc)                    (* push variable from env *)
-                  | SAdd -> aux xs (2 :: acc)                            (* pop args, push sum     *)
-                  | SSub -> aux xs (3 :: acc)                            (* pop args, push diff.   *)
-                  | SMul -> aux xs (4 :: acc)                            (* pop args, push product *)
-                  | SPop -> aux xs (5 :: acc)                            (* pop value/unbind var   *)
-                  | SSwap -> aux xs (6 :: acc)
-        |[] -> acc
-    aux lst [];;
+//exercise 2.4
+let sinstrToInt (s: sinstr) : int list = 
+    match s with
+    | SCstI i ->  [0; i]                   (* push integer           *)
+    | SVar v  -> [0; v]                     (* push variable from env *)
+    | SAdd -> [2]                            (* pop args, push sum     *)
+    | SSub -> [3]                            (* pop args, push diff.   *)
+    | SMul -> [4]                            (* pop args, push product *)
+    | SPop -> [5]                            (* pop value/unbind var   *)
+    | SSwap -> [6];;
+
+
+let assemble (lst: sinstr list) : int list = 
+  List.fold(fun (acc: int list) (s: sinstr)  -> acc @ (sinstrToInt s)) [] lst
     
     
     
