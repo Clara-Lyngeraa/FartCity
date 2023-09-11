@@ -9,6 +9,9 @@
         <Compile Include="Assignment01\Intro2.fs" />
         <Compile Include="Assignment01\SimpleExpr.cs" />
         <Compile Include="Assignment01\Intcomp1.fs" />
+        <Compile Include="Assignment02\Intcomp1.fs" />
+        <Content Include="Assignment02\Machine.java" />
+        <Content Include="Assignment02\Rest.md" />
     </ItemGroup>
 
 </Project>
