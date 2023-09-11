@@ -27,3 +27,16 @@ c) (0* 4[3-9])|0*[5-9][0-9]|0\*([1-9]\d{2,})
 ### DFA
 
 ![Exercise2.2DFA.png](Exercise2.2DFA.png)
+
+## HelloLex
+
+### q.1
+```['0'-'9']``` - it matches any single digit between 0 and 9.
+
+### q.2 
+using ``` mono ~/bin/fsharp/fslex.exe --unicode hello.fsl ```
+- The additional file being generated is hello.fs
+- 3 states are in the automaton of the lexer
+
+### q.3
+
