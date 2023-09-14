@@ -73,12 +73,9 @@ See code in Parse.fs
 ### Exercise 3.7
 
 See code in Absyn.fs, ExprLex.fsl and ExprPar.fsy
-Saved commands: 
+Saved commands:
 
 Navigate into Expr folder \
-``` ./fsharp/fslex --unicode ExprLex.fsl ```
-```./fsharp/fsyacc --module ExprPar ExprPar.fsy ```
-```fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs Expr.fs ExprPar.fs ExprLex.fs Parse.fs ```
-
-
-
+`./fsharp/fslex --unicode ExprLex.fsl`
+`./fsharp/fsyacc --module ExprPar ExprPar.fsy `
+`fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs Expr.fs ExprPar.fs ExprLex.fs Parse.fs `
