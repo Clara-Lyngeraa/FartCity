@@ -1,4 +1,4 @@
-module PRDATAssignments.Assignment02.Intcomp1
+module Assignment03.Intcomp1
 
 (* Programming language concepts for software developers, 2012-02-17 *)
 

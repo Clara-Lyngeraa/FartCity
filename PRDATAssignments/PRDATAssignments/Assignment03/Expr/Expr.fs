@@ -38,7 +38,9 @@ let rec fmt1 (e : expr) : string =
       | Let(x, erhs, ebody) -> 
             String.concat " " ["let"; x; "="; fmt1 erhs;
                                "in"; fmt1 ebody; "end"]
+      | If(e1, e2, e3) -> failwith "got to the if case"
       | Prim(ope, e1, e2) -> String.concat "" ["("; fmt1 e1; ope; fmt1 e2; ")"]
+
 
 (* Format expressions as strings, avoiding excess parentheses *)
 
@@ -49,6 +51,7 @@ let rec fmt2 (ctxpre : int) (e : expr) =
       | Let(x, erhs, ebody) -> 
             String.concat " " ["let"; x; "="; fmt2 -1 erhs;
                                "in"; fmt2 -1 ebody; "end"]
+      | If(e1, e2, e3) -> failwith "got to the if case"
       | Prim(ope, e1, e2) -> 
             (match ope with
                  "+" -> wrappar ctxpre 6 [fmt2 5 e1; ope; fmt2 6 e2]
@@ -79,6 +82,7 @@ let rec eval (e : expr) (env : (string * int) list) : int =
             let xval = eval erhs env 
             let env1 = (x, xval) :: env in
             eval ebody env1
+      | If(e1, e2, e3) -> failwith "got to the if case"
       | Prim("+", e1, e2) -> eval e1 env + eval e2 env
       | Prim("*", e1, e2) -> eval e1 env * eval e2 env
       | Prim("-", e1, e2) -> eval e1 env - eval e2 env
@@ -104,6 +108,7 @@ let rec closedin (e : expr) (env : string list) : bool =
       | Let(x, erhs, ebody) -> 
             let env1 = x :: env 
             closedin erhs env && closedin ebody env1
+      | If(e1, e2, e3) -> failwith "got to the if case"
       | Prim(ope, e1, e2) -> closedin e1 env && closedin e2 env;
 
 (* An expression is closed if it is closed in the empty environment *)
@@ -141,6 +146,7 @@ let rec freevars e : string list =
       | Var x  -> [x]
       | Let(x, erhs, ebody) -> 
             union (freevars erhs) (minus (freevars ebody) [x])
+      | If(e1, e2, e3) -> failwith "got to the if case"
       | Prim(ope, e1, e2) -> union (freevars e1) (freevars e2)
 
 (* Alternative definition of closed *)
@@ -181,6 +187,7 @@ let rec tcomp e (cenv : string list) : texpr =
       | Let(x, erhs, ebody) -> 
             let cenv1 = x :: cenv 
             TLet(tcomp erhs cenv, tcomp ebody cenv1)
+      | If(e1, e2, e3) -> failwith "got to the if case"
       | Prim(ope, e1, e2) -> TPrim(ope, tcomp e1 cenv, tcomp e2 cenv)
 
 (* Evaluation of target expressions with variable indexes.  The
@@ -303,6 +310,7 @@ let rec scomp e (cenv : rtvalue list) : sinstr list =
       | Var x  -> [SVar (getindex cenv (Bound x))]
       | Let(x, erhs, ebody) -> 
             scomp erhs cenv @ scomp ebody (Bound x :: cenv) @ [SSwap; SPop]
+      | If (e1,e2,e3) -> failwith ("not implemented")
       | Prim("+", e1, e2) -> 
             scomp e1 cenv @ scomp e2 (Intrm :: cenv) @ [SAdd] 
       | Prim("-", e1, e2) -> 

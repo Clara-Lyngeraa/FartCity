@@ -1,18 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <Compile Include="Assignment01\Intro2.fs" />
-        <Compile Include="Assignment01\SimpleExpr.cs" />
-        <Compile Include="Assignment01\Intcomp1.fs" />
-        <Compile Include="Assignment02\Intcomp1.fs" />
-        <Compile Include="Assignment03\Expr\Intcomp1.fs" />
-        <Content Include="Assignment02\Machine.java" />
-        <Content Include="Assignment02\Rest.md" />
-    </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Assignment03/Expr/Intcomp1.fs" />
+    <Compile Include="Assignment03/Expr/Absyn.fs" />
+    <Compile Include="Assignment03/Expr/ExprPar.fsi" />
+    <Compile Include="Assignment03/Expr/ExprPar.fs" />
+    <Compile Include="Assignment03/Expr/ExprLex.fs" />
+    <Compile Include="Assignment03/Expr/Expr.fs" />
+    <Compile Include="Assignment03/Expr/Parse.fs" />
+    <Compile Include="Assignment01\Intro2.fs" />
+    <Compile Include="Assignment01\Intcomp1.fs" />
+    <Compile Include="Assignment01\SimpleExpr.cs" />
+    <Compile Include="Assignment02\Intcomp1.fs" />
+    <Content Include="Assignment02\Rest.md" />
+    <Content Include="Assignment02\Machine.java" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FsLexYacc" Version="11.2.0" />
+    <PackageReference Include="FsLexYacc.Runtime" Version="11.2.0" />
+  </ItemGroup>
 </Project>
