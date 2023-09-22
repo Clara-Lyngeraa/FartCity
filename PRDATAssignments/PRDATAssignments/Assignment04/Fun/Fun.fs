@@ -24,7 +24,7 @@ let rec lookup env x =
 
 type value = 
   | Int of int
-  | Closure of string * string * expr * value env       (* (f, x, fBody, fDeclEnv) *)
+  | Closure of string * string list * expr * value env       (* (f, x, fBody, fDeclEnv) *)
 
 let rec eval (e : expr) (env : value env) : int =
     match e with 
@@ -52,21 +52,36 @@ let rec eval (e : expr) (env : value env) : int =
       let b = eval e1 env
       if b<>0 then eval e2 env
       else eval e3 env
-    | Letfun(f, x, fBody, letBody) -> 
-      let bodyEnv = (f, Closure(f, x, fBody, env)) :: env 
-      eval letBody bodyEnv
-    | Call(Var f, eArg) -> 
+    | Letfun(f, lst, fBody, letBody) -> 
+      match lst with
+      | x :: [] -> 
+        let bodyEnv = (f, Closure(f, [x], fBody, env)) :: env 
+        eval letBody bodyEnv
+      | x :: xs ->
+        let bodyEnv = (f, Closure(f, xs, fBody, env)) :: env
+        eval (Letfun (f, xs, fBody, letBody)) bodyEnv
+    | Call((Var f), (lst : expr list)) -> 
       let fClosure = lookup env f
-      match fClosure with
-      | Closure (f, x, fBody, fDeclEnv) ->
-        let xVal = Int(eval eArg env)
-        let fBodyEnv = (x, xVal) :: (f, fClosure) :: fDeclEnv
-        eval fBody fBodyEnv
-      | _ -> failwith "eval Call: not a function"
+        match fClosure with
+          | Closure (f, ys, fBody, fDeclEnv) ->
+            match ys with 
+            | x :: xs -> 
+                let xVal = Int(eval x env)
+                let fBodyEnv = (x, xVal) :: (Var f, fClosure) :: fDeclEnv
+
+
+
+
+            let xVal = Int(eval x env)
+            eval fBody fBodyEnv
+          | _ -> failwith "eval Call: not a function"
+      
     | Call _ -> failwith "eval Call: not first-order function"
 
 (* Evaluate in empty environment: program must have no free variables: *)
 
+
+(*
 let run e = eval e [];;
 
 (* Examples in abstract syntax *)
@@ -114,3 +129,4 @@ let ex5 =
                           Call(Var "fib", Prim("-", Var "n", CstI 2))),
                      CstI 1), Call(Var "fib", CstI 25)));;
                      
+*)
