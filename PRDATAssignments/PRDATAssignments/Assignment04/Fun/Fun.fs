@@ -13,6 +13,15 @@ open Absyn
 
 (* Environment operations *)
 
+
+ // f = x + 7 
+// f = x + y + 7 
+
+// let f [x; y] = x + y + 7 in f 2 end
+// let f [y] = y + 7 in f 2 end
+// let f [] 
+
+
 type 'v env = (string * 'v) list
 
 let rec lookup env x =
@@ -62,20 +71,21 @@ let rec eval (e : expr) (env : value env) : int =
         eval (Letfun (f, xs, fBody, letBody)) bodyEnv
     | Call((Var f), (lst : expr list)) -> 
       let fClosure = lookup env f
-        match fClosure with
-          | Closure (f, ys, fBody, fDeclEnv) ->
-            match ys with 
+      match fClosure with
+        | Closure (f, ys, fBody, fDeclEnv) ->
+          let rec aux (ys: string list) (acc : (string * value) list) =
+            match ys with
             | x :: xs -> 
-                let xVal = Int(eval x env)
-                let fBodyEnv = (x, xVal) :: (Var f, fClosure) :: fDeclEnv
+              
+              let xVal = Int(eval (Var x) env)
+              let newAcc = (x, xVal) :: acc
+              aux xs newAcc
+            | [] -> 
+                let fBodyEnv = acc @ (f, fClosure) :: fDeclEnv
+                eval fBody acc
+          aux ys []
 
-
-
-
-            let xVal = Int(eval x env)
-            eval fBody fBodyEnv
-          | _ -> failwith "eval Call: not a function"
-      
+        | _ -> failwith "eval Call: not a function"
     | Call _ -> failwith "eval Call: not first-order function"
 
 (* Evaluate in empty environment: program must have no free variables: *)
