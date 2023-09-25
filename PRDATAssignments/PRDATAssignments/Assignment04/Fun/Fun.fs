@@ -69,22 +69,21 @@ let rec eval (e : expr) (env : value env) : int =
       | x :: xs ->
         let bodyEnv = (f, Closure(f, xs, fBody, env)) :: env
         eval (Letfun (f, xs, fBody, letBody)) bodyEnv
-    | Call((Var f), (lst : expr list)) -> 
-      let fClosure = lookup env f
+    | Call(Var f, eArg) ->  //eArgs is the list of arguments to call f with?
+      let fClosure = lookup env f //lookup either is an Int or a Closure
       match fClosure with
-        | Closure (f, ys, fBody, fDeclEnv) ->
-          let rec aux (ys: string list) (acc : (string * value) list) =
-            match ys with
-            | x :: xs -> 
-              let xVal = Int(eval (Var x) env)
-              let newAcc = (x, xVal) :: acc
-              aux xs newAcc
-            | [] -> 
-                let fBodyEnv = acc @ (f, fClosure) :: fDeclEnv
-                eval fBody acc
-          aux ys []
+      | Closure (f, parameters, fBody, fDeclEnv) ->
+        
+          //evaluating all expressions in the call to Call
+          let argsEval = List.map(fun arg -> Int(eval arg env)) eArg 
 
-        | _ -> failwith "eval Call: not a function"
+          //zipping together the list of params with the list of evaluated arguments
+          let paramsArgs = List.zip parameters argsEval
+
+          //add the zipped list to the closure and then to the environment
+          let fBodyEnv = paramsArgs @ (f, fClosure) :: fDeclEnv
+          eval fBody fBodyEnv //evaluate the function body in the environment created
+      | _ -> failwith "eval Call: not a function" //the fClosure was not a function call but an Int
     | Call _ -> failwith "eval Call: not first-order function"
 
 (* Evaluate in empty environment: program must have no free variables: *)
