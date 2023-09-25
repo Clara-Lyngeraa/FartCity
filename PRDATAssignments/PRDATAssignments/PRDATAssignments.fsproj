@@ -4,6 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FsLexYacc" Version="11.2.0" />
+    <PackageReference Include="FsLexYacc.Runtime" Version="11.2.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assignment04/Fun/ParseAndRun.fs" />
     <Compile Include="Assignment04/Fun/FunPar.fsi" />
     <Compile Include="Assignment04/Fun/FunPar.fs" />
@@ -24,9 +28,5 @@
     <Compile Include="Assignment02\Intcomp1.fs" />
     <Content Include="Assignment02\Rest.md" />
     <Content Include="Assignment02\Machine.java" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="FsLexYacc" Version="11.2.0" />
-    <PackageReference Include="FsLexYacc.Runtime" Version="11.2.0" />
   </ItemGroup>
 </Project>

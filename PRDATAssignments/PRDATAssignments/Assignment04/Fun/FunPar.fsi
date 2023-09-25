@@ -24,6 +24,8 @@ type token =
   | NOT
   | THEN
   | TRUE
+  | AND
+  | OR
   | EXPRS of (Absyn.expr list)
   | NAMES of (string list)
   | CSTBOOL of (bool)
@@ -53,6 +55,8 @@ type tokenId =
     | TOKEN_NOT
     | TOKEN_THEN
     | TOKEN_TRUE
+    | TOKEN_AND
+    | TOKEN_OR
     | TOKEN_EXPRS
     | TOKEN_NAMES
     | TOKEN_CSTBOOL
