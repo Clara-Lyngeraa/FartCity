@@ -88,8 +88,6 @@ let rec eval (e : expr) (env : value env) : int =
 
 (* Evaluate in empty environment: program must have no free variables: *)
 
-
-
 let run e = eval e [];;
 (*
 (* Examples in abstract syntax *)

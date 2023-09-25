@@ -38,6 +38,7 @@ C. Using the lexer, parser and first-order evaluator together:
    run (fromString "5+7");;
    run (fromString "let y = 7 in y + 2 end");;
    run (fromString "let f x = x + 7 in f 2 end");;
+   
 
 D. Fart City: Exercise 4.2
    run (fromString "let sum n = if n = 0 then n else n + sum n-1 in sum 1000 end");;
