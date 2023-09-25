@@ -41,7 +41,6 @@ type token =
   | CSTBOOL of (bool)
   | NAME of (string)
   | CSTINT of (int)
-  
 // This type is used to give symbolic names to token indexes, useful for error messages
 type tokenId = 
     | TOKEN_EOF

@@ -76,7 +76,6 @@ let rec eval (e : expr) (env : value env) : int =
           let rec aux (ys: string list) (acc : (string * value) list) =
             match ys with
             | x :: xs -> 
-              
               let xVal = Int(eval (Var x) env)
               let newAcc = (x, xVal) :: acc
               aux xs newAcc
