@@ -89,9 +89,9 @@ let rec eval (e : expr) (env : value env) : int =
 (* Evaluate in empty environment: program must have no free variables: *)
 
 
-(*
-let run e = eval e [];;
 
+let run e = eval e [];;
+(*
 (* Examples in abstract syntax *)
 
 let ex1 = Letfun("f1", "x", Prim("+", Var "x", CstI 1), 
