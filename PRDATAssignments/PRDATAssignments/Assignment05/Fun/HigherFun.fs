@@ -133,3 +133,19 @@ let twAdd1C2 =
     ("app", "y", Call (Var "g", Call (Var "g", Var "y")),
      [("g", Closure ("add1", "x", Prim ("+", Var "x", CstI 1), []))])
 let res2 = eval (Call(Var "twAdd1C2", CstI 1)) [("twAdd1C2",twAdd1C2)]
+
+//Assignment 5 FartCity
+//exercise 5.1
+
+let merge ((lst1: int list), (lst2: int list)) : int list = 
+    let rec aux acc ls1 ls2 = 
+        match ls1,ls2 with
+        |[], [] -> List.rev acc
+        |(x :: xs, y :: ys) when x < y -> aux (x :: acc) xs (y::ys)
+        |(x :: xs, y :: ys) when x > y -> aux (y :: acc) (x::xs) ys
+        |(x :: xs, y :: ys) when x = y -> aux (y :: acc) (x::xs) ys
+        | [], ys -> List.rev acc @ ys
+        | xs, [] -> List.rev acc @ xs
+    aux [] lst1 lst2;;
+
+
