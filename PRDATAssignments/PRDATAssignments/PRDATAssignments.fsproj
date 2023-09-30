@@ -8,8 +8,17 @@
     <PackageReference Include="FsLexYacc.Runtime" Version="11.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assignment05/Fun/Fun.fs" />
+    <Compile Include="Assignment05/Fun/FunLex.fs" />
+    <Compile Include="Assignment05/Fun/FunPar.fsi" />
+    <Compile Include="Assignment05/Fun/FunPar.fs" />
     <Compile Include="Assignment05/Fun/Absyn.fs" />
+    <Compile Include="Assignment05/Fun/Parse.fs" />
     <Compile Include="Assignment05/Fun/HigherFun.fs" />
+    <Compile Include="Assignment05/Fun/TypeInference.fs" />
+    <Compile Include="Assignment05/Fun/ParseAndRunHigher.fs" />
+    <Compile Include="Assignment05/Fun/ParseAndType.fs" />
+    <Compile Include="Assignment05/Fun/slowTypeInference.fsx" />
     <Compile Include="Assignment04/Fun/FunPar.fsi" />
     <Compile Include="Assignment04/Fun/FunPar.fs" />
     <Compile Include="Assignment04/Fun/FunLex.fs" />

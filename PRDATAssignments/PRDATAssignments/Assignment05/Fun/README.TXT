@@ -62,10 +62,50 @@ E. Using the lexer, parser and higher-order evaluator together:
    fslex --unicode FunLex.fsl
    fsharpi -r ~/fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs HigherFun.fs ParseAndRunHigher.fs
 
-   open ParseAndRunHigher;;
-   run (fromString @"let twice f = let g x = f(f(x)) in g end 
-                     in let mul3 z = z*3 in twice mul3 2 end end");;
+   Our way of running
+   ./fsharp/fsyacc --module FunPar FunPar.fsy
+   ./fsharp/fslex --unicode FunLex.fsl
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs HigherFun.fs ParseAndRunHigher.fs
 
+
+
+   open ParseAndRunHigher;;
+   
+   FartCity Exercise 6.1
+   
+   run (fromString @"let add x = let f y = x+y in f end
+                     in add 2 5 end");;
+   val it : HigherFun.value = Int 7
+   
+   run (fromString @"let add x = let f y = x+y in f end
+                     in let addtwo = add 2
+                     in addtwo 5 end
+                     end");;
+   val it : HigherFun.value = Int 7
+
+   run (fromString @"let add x = let f y = x+y in f end
+                     in let addtwo = add 2
+                        in let x = 77 in addtwo 5 end
+                        end
+                     end");;
+   val it : HigherFun.value = Int 7
+
+   run (fromString @"let add x = let f y = x+y in f end
+                     in add 2 end");;
+   
+   val it : HigherFun.value =
+   Closure
+      ("f", "y", Prim ("+", Var "x", Var "y"),
+      [("x", Int 2);
+         ("add",
+         Closure
+            ("add", "x", Letfun ("f", "y", Prim ("+", Var "x", Var "y"), Var "f"),
+            []))])
+   
+   we have function add and function f which both is declared polymorphic, but in the add 2 we say that add takes an int. 
+   Since we give no argument to the function f we create a closure for the function f, that in its 
+   enviroment has the closure for the function add. This means to evaluate f in this environment?
+       
 F. Using the lexer, parser and polymorphic type inference together:
 
    fsyacc --module FunPar FunPar.fsy
