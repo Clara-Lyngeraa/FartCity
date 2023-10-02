@@ -67,15 +67,16 @@ E. Using the lexer, parser and higher-order evaluator together:
    ./fsharp/fslex --unicode FunLex.fsl
    fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs HigherFun.fs ParseAndRunHigher.fs
 
-
+   
 
    open ParseAndRunHigher;;
    
    FartCity Exercise 6.1
-   
+
    run (fromString @"let add x = let f y = x+y in f end
                      in add 2 5 end");;
    val it : HigherFun.value = Int 7
+
    
    run (fromString @"let add x = let f y = x+y in f end
                      in let addtwo = add 2
@@ -102,10 +103,32 @@ E. Using the lexer, parser and higher-order evaluator together:
             ("add", "x", Letfun ("f", "y", Prim ("+", Var "x", Var "y"), Var "f"),
             []))])
    
-   we have function add and function f which both is declared polymorphic, but in the add 2 we say that add takes an int. 
+   Theh result of the third expression is as expcted, since we call addTwo with 5.
+
+   We have function add and function f which both is declared polymorphic, but in the add 2 we say that add takes an int. 
    Since we give no argument to the function f we create a closure for the function f, that in its 
-   enviroment has the closure for the function add. This means to evaluate f in this environment?
-       
+   enviroment has the closure for the function with the name "add". This means to evaluate f in this environment
+
+
+   Exercise 6.2
+   run (fromString @"fun x -> x * 2");;
+   val it : HigherFun.value = Clos ("x", Prim ("*", Var "x", CstI 2), [])
+
+
+   Exercise 6.3
+
+   open ParseAndRunHigher;;
+   run (fromString @"let add x = fun y -> x+y
+                     in add 2 5 end");;
+
+   run (fromString @"let add = fun x -> fun y -> x+y
+                     in add 2 5 end");;
+
+
+
+   Exercise 6.4
+   ![Exercise64.png](Exercise64.png)
+
 F. Using the lexer, parser and polymorphic type inference together:
 
    fsyacc --module FunPar FunPar.fsy

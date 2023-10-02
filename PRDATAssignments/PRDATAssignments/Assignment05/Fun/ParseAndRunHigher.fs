@@ -8,9 +8,11 @@ let fromString = Parse.fromString;;
 
 let eval = HigherFun.eval;;
 
+
 let run e = eval e [];;
 
 (* Examples of higher-order programs, in concrete syntax *)
+
 
 let ex5 = 
     Parse.fromString 
