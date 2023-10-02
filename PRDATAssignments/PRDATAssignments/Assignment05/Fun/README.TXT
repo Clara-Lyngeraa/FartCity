@@ -126,8 +126,7 @@ E. Using the lexer, parser and higher-order evaluator together:
 
 
 
-   Exercise 6.4
-   ![Exercise64.png](Exercise64.png)
+   
 
 F. Using the lexer, parser and polymorphic type inference together:
 
