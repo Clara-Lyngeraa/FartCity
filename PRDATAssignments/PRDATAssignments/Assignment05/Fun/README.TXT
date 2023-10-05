@@ -176,7 +176,6 @@ FartCity exercise 6.5
    > inferType (fromString "let f x = let g y = if y + x = 1 then 1 else 0 in g end in f end");;
    val it : string = "(int -> (int -> int))"
 
-
    > inferType (fromString "let f x = let g y = x in g end in f end");;
    val it : string = "('h -> ('g -> 'h))"
 
