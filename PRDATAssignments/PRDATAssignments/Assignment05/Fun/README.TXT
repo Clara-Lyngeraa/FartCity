@@ -183,16 +183,10 @@ FartCity exercise 6.5
    > inferType (fromString "let f x = let g y = y in g end in f end");;
    val it : string = "('g -> ('h -> 'h))"
 
-
-   inferType (fromString "");;
-
+   inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
 
    > inferType (fromString "let f x = let g = f x in g end in f end");;
    val it : string = "('e -> 'f)"
    
    > inferType (fromString "let f x = f 1 in f 1 end");;
    val it : string = "'e"
-   
-   inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
-   
-
