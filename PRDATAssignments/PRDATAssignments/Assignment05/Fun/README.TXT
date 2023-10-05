@@ -136,3 +136,60 @@ F. Using the lexer, parser and polymorphic type inference together:
 
    open ParseAndType;;
    inferType (fromString "let f x = 1 in f 7 + f false end");;
+
+FartCity exercise 6.5
+
+  > inferType (fromString "let f x = 1 in f f end");;
+   val it : string = "int"
+
+   1)
+   inferType (fromString "let f g = g g in f end");;
+   System.Exception: type error: circularity...
+
+   2)
+   This error was produced since there are recursive type dependencies 
+   that cannot be resolved: g calls itself with g
+
+   3) 
+   > inferType (fromString "let f x = let g y = y in g false end in f 42 end");;
+   val it : string = "bool"
+
+   4)
+   > inferType (fromString "let f x = let g y = if true then y else x in g false end in f 42 end" );;- 
+   System.Exception: type error: bool and int...
+   
+   This error was produced because we are trying to call the f function with an int (42), 
+   but the g functions tries to return both a boolean (then y) and an integer (else x);
+
+   5)
+   > inferType (fromString "let f x = let g y = if true then y else x in g false end in f true end" )- ;;
+   val it : string = "bool"
+
+   (2)
+   > inferType (fromString "let f x = if x then true else false in f end");;
+   val it : string = "(bool -> bool)"
+   
+   > inferType (fromString "let f x = if x = 1 then 1 else 0 in f end");;
+   val it : string = "(int -> int)"
+
+   > inferType (fromString "let f x = let g y = if y + x = 1 then 1 else 0 in g end in f end");;
+   val it : string = "(int -> (int -> int))"
+
+
+   > inferType (fromString "let f x = let g y = x in g end in f end");;
+   val it : string = "('h -> ('g -> 'h))"
+
+   > inferType (fromString "let f x = let g y = y in g end in f end");;
+   val it : string = "('g -> ('h -> 'h))"
+
+
+   inferType (fromString "");;
+
+
+   > inferType (fromString "let f x = let g = f x in g end in f end");;
+   val it : string = "('e -> 'f)"
+   
+   > inferType (fromString "let f x = f 1 in f 1 end");;
+   val it : string = "'e"
+   
+
