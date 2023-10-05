@@ -175,3 +175,4 @@ Stopped due to error
 inferType (fromString " let f x = let g y = if true then y else x in g false end in f true end");;
 val it : string = "bool"
    
+inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
