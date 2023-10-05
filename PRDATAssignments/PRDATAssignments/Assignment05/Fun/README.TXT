@@ -130,10 +130,11 @@ E. Using the lexer, parser and higher-order evaluator together:
 
 F. Using the lexer, parser and polymorphic type inference together:
 
-   fsyacc --module FunPar FunPar.fsy
-   fslex --unicode FunLex.fsl
-   fsharpi -r ~/fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs TypeInference.fs ParseAndType.fs
+   ./fsharp/fsyacc --module FunPar FunPar.fsy
+   ./fsharp/fslex --unicode FunLex.fsl
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs TypeInference.fs ParseAndType.fs
 
+  
    open ParseAndType;;
    inferType (fromString "let f x = 1 in f 7 + f false end");;
 
@@ -191,5 +192,7 @@ FartCity exercise 6.5
    
    > inferType (fromString "let f x = f 1 in f 1 end");;
    val it : string = "'e"
+   
+   inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
    
 
