@@ -137,42 +137,62 @@ F. Using the lexer, parser and polymorphic type inference together:
   
    open ParseAndType;;
    inferType (fromString "let f x = 1 in f 7 + f false end");;
+
+FartCity exercise 6.5
+
+  > inferType (fromString "let f x = 1 in f f end");;
    val it : string = "int"
 
-   inferType (fromString "let f x = 1 in f f end");;
-   val it : string = "int"
-
+   1)
    inferType (fromString "let f g = g g in f end");;
-   System.Exception: type error: circularity
-  at FSI_0002.TypeInference.occurCheck[0] (a tyvar, Microsoft.FSharp.Collections.FSharpList`1[T] tyvars) [0x00012] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.TypeInference.linkVarToType (Microsoft.FSharp.Core.FSharpRef`1[T] tyvar, FSI_0002.TypeInference+typ t) [0x00027] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.TypeInference.unify (FSI_0002.TypeInference+typ t1, FSI_0002.TypeInference+typ t2) [0x002bf] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.TypeInference.typ (System.Int32 lvl, Microsoft.FSharp.Collections.FSharpList`1[T] env, FSI_0002.Absyn+expr e) [0x00546] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.TypeInference.typ (System.Int32 lvl, Microsoft.FSharp.Collections.FSharpList`1[T] env, FSI_0002.Absyn+expr e) [0x00438] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.ParseAndType+inferType@7.Invoke (FSI_0002.Absyn+expr e) [0x00019] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at <StartupCode$FSI_0006>.$FSI_0006.main@ () [0x00014] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
-  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <baaab171478d4061bd9316f48a642f06>:0 
-Stopped due to error
+   System.Exception: type error: circularity...
 
-Circuler reference, kan ikke deffinere g ud fra sig selv
+   2)
+   This error was produced since there are recursive type dependencies 
+   that cannot be resolved: g calls itself with g
 
+   3) 
+   > inferType (fromString "let f x = let g y = y in g false end in f 42 end");;
+   val it : string = "bool"
 
-inferType (fromString "let f x = let g y = y in g false end in f 42 end");;
-val it : string = "bool"
-
-inferType (fromString "  let f x = let g y = if true then y else x in g false end in f 42 end");;
-System.Exception: type error: bool and int
-  at FSI_0002.TypeInference.unify (FSI_0002.TypeInference+typ t1, FSI_0002.TypeInference+typ t2) [0x00103] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.TypeInference.unify (FSI_0002.TypeInference+typ t1, FSI_0002.TypeInference+typ t2) [0x001ba] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.TypeInference.typ (System.Int32 lvl, Microsoft.FSharp.Collections.FSharpList`1[T] env, FSI_0002.Absyn+expr e) [0x00546] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at FSI_0002.ParseAndType+inferType@7.Invoke (FSI_0002.Absyn+expr e) [0x00019] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at <StartupCode$FSI_0008>.$FSI_0008.main@ () [0x00014] in <cfe1bb4d63714bb497520028f0c4d914>:0 
-  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
-  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <baaab171478d4061bd9316f48a642f06>:0 
-Stopped due to error
-
-inferType (fromString " let f x = let g y = if true then y else x in g false end in f true end");;
-val it : string = "bool"
+   4)
+   > inferType (fromString "let f x = let g y = if true then y else x in g false end in f 42 end" );;- 
+   System.Exception: type error: bool and int...
    
-inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
+   This error was produced because we are trying to call the f function with an int (42), 
+   but the g functions tries to return both a boolean (then y) and an integer (else x);
+
+   5)
+   > inferType (fromString "let f x = let g y = if true then y else x in g false end in f true end" )- ;;
+   val it : string = "bool"
+
+   (2)
+   > inferType (fromString "let f x = if x then true else false in f end");;
+   val it : string = "(bool -> bool)"
+   
+   > inferType (fromString "let f x = if x = 1 then 1 else 0 in f end");;
+   val it : string = "(int -> int)"
+
+   > inferType (fromString "let f x = let g y = if y + x = 1 then 1 else 0 in g end in f end");;
+   val it : string = "(int -> (int -> int))"
+
+
+   > inferType (fromString "let f x = let g y = x in g end in f end");;
+   val it : string = "('h -> ('g -> 'h))"
+
+   > inferType (fromString "let f x = let g y = y in g end in f end");;
+   val it : string = "('g -> ('h -> 'h))"
+
+
+   inferType (fromString "");;
+
+
+   > inferType (fromString "let f x = let g = f x in g end in f end");;
+   val it : string = "('e -> 'f)"
+   
+   > inferType (fromString "let f x = f 1 in f 1 end");;
+   val it : string = "'e"
+   
+   inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
+   
+
