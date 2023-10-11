@@ -83,7 +83,10 @@ let rec eval (e : expr) (env : value env) : int =
           //add the zipped list to the closure and then to the environment
           let fBodyEnv = paramsArgs @ (f, fClosure) :: fDeclEnv
           eval fBody fBodyEnv //evaluate the function body in the environment created
-      | _ -> failwith "eval Call: not a function" //the fClosure was not a function call but an Int
+      | _ -> 
+          printf "f was: %A" f
+          printf "eArgs was: %A" eArg
+          failwith "eval Call: not a function" //the fClosure was not a function call but an Int
     | Call _ -> failwith "eval Call: not first-order function"
 
 (* Evaluate in empty environment: program must have no free variables: *)
