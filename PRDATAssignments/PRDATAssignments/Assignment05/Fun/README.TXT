@@ -19,7 +19,7 @@ B. Generating and compiling the lexer and parser, and loading them:
 
    fsyacc --module FunPar FunPar.fsy
    fslex --unicode FunLex.fsl
-   fsharpi -r ~/fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs   
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs   
 
    open Parse;;
    let e1 = fromString "5+7";;
