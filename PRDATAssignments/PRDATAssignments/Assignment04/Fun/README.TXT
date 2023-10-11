@@ -49,10 +49,18 @@ C. Using the lexer, parser and first-order evaluator together:
    val it : int = 9
 
 D. Fart City: Exercise 4.2
-   run (fromString "let sum n = if n = 0 then n else n + sum n-1 in sum 1000 end");;
-   run (fromString "let f x =  if x = 0 then 3 else 3 * f x-1 in f 8 end");;
-   run (fromString "let f x = let g y = if y = 0 then 1 else 3 * g y-1 in g x + f x-1 end in f 11 end");;
-   run (fromString "let f x = let g y = if y = 1 then x else x * g y-1 in g 8 + f x-1 end in f 10 end ");;
+   run (fromString "let sum n = if n = 0 then 0 else n + sum(n-1) in sum 1000 end");;
+   run (fromString "let f x =  if x = 0 then 1 else 3 * (f(x-1)) in f 8 end");;
+   run (fromString "let f x = if x = 0 then 1 else 3 * (f(x-1)) 
+                           in let g x = if x = 0 then 1 else (f(x)) + (g(x-1))
+                           in g 11 end
+                           end");;
+   run (fromString "let f x = x*x*x*x*x*x*x*x
+                           in let g x = if x = 1 then x else (f(x-1))
+                           in g 10 end
+                           end");;
+
+   
    
 
 
