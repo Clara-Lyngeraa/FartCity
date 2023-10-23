@@ -27,7 +27,8 @@ let keyword s =
     | "return"  -> RETURN
     | "true"    -> CSTBOOL 1
     | "void"    -> VOID 
-    | "while"   -> WHILE         
+    | "while"   -> WHILE  
+    | "for"     -> FOR (*Exercise 7.3 Fartcity*)      
     | _         -> NAME s
  
 let cEscape s = 

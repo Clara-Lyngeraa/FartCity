@@ -1,4 +1,4 @@
-// FartCity exercise 7.2 (ii)
+// FartCity exercise 7.2 (i) and (ii)
 int *sump;
 
 void arrsum(int n, int arr[], int *sump) {
