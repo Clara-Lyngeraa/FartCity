@@ -68,6 +68,8 @@ our way of running:
 ./fsharp/fslex --unicode CLex.fsl      
 fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs ParseAndRun.fs
 
+
+
 B. To compile and use the micro-C compiler
 
    fslex --unicode CLex.fsl

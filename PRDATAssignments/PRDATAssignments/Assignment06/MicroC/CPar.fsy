@@ -100,7 +100,9 @@ StmtM:  /* No unbalanced if-else */
   | Block                               { $1                   }
   | IF LPAR Expr RPAR StmtM ELSE StmtM  { If($3, $5, $7)       }
   | WHILE LPAR Expr RPAR StmtM          { While($3, $5)        }
-  | FOR LPAR Expr SEMI Expr SEMI Expr RPAR Stmt {Block [stmt(Expr $3), While($5, Block [stmt($9), stmt(Expr $7)])]} (* Exercie 7.3 Fart city: Parsing something of form: for (e1 ; e2 ; e3) stmt *)
+  | FOR LPAR Expr SEMI Expr SEMI Expr stmt 
+                                        { Block [stmt(Expr($3)); stmt(While($5, Block[stmt($8), stmt(Expr ($7))]))]} (* Fart city exercise 7.3*)
+
 ;
 
 StmtU:
