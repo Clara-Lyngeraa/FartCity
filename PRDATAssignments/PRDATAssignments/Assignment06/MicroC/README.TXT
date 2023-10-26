@@ -109,6 +109,12 @@ Exercise 7.3
      ...] 
 
 
+Exercise 7.5
+> run (fromFile "7_5_tester.c") [];; 
+0 1 2 3 4 val it : Interp.store = map [(0, 5)]
+
+
+
 
 B. To compile and use the micro-C compiler
 

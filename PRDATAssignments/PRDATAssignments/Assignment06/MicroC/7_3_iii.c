@@ -41,14 +41,12 @@ void main()
     int freq[4];
     int max;
     max = 3;
-    int i;
-    i = 0;
 
     histogram(7, arr, 3, freq);
 
     int t;
-    t = 0;
-    while (t <= max)
+
+    for (t = 0; t <= max; t = t + 1)
     {
         print freq[t];
         t = t + 1;
