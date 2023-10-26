@@ -60,13 +60,53 @@ A. Generating and compiling the lexer and parser for micro-C, and
 
 Exercise 7.2:
 
-> run (fromFile "7_2.c");;
-
-
 our way of running:
 ./fsharp/fslex --unicode CLex.fsl     
 ./fsharp/fsyacc --module CPar CPar.fsy    
 fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs ParseAndRun.fs
+
+open ParseAndRun;;
+(i)
+
+> run (fromFile "7_2_i.c") [];;
+29 val it : Interp.store =
+  map
+    [(-1, 29); (0, -1); (1, 7); (2, 13); (3, 9); (4, 8); (5, 1); (6, 3);
+     (7, 1); ...]
+
+(ii)
+> run (fromFile "7_2_ii.c") [10];;
+285 val it : Interp.store =
+  map
+    [(-1, 285); (0, -1); (1, 10); (2, 0); (3, 1); (4, 4); (5, 9); (6, 16);
+     (7, 25); ...]
+
+(iii)
+>run (fromFile "7_2_iii.c") [];;
+1 4 2 0 val it : Interp.store =
+  map
+    [(0, 1); (1, 2); (2, 1); (3, 1); (4, 1); (5, 2); (6, 0); (7, 0); (8, 1);
+     ...]
+
+
+Exercise 7.3 
+> run (fromFile "7_3_i.c") [];;
+29 val it : Interp.store =
+  map
+    [(-1, 29); (0, -1); (1, 7); (2, 13); (3, 9); (4, 8); (5, 1); (6, 3);
+     (7, 1); ...]
+
+> run (fromFile "7_3_ii.c") [10];;   
+285 val it : Interp.store =
+  map
+    [(-1, 285); (0, -1); (1, 10); (2, 0); (3, 1); (4, 4); (5, 9); (6, 16);
+     (7, 25); ...]
+
+> run (fromFile "7_2_iii.c") [];;  
+1 4 2 0 val it : Interp.store =
+  map
+    [(0, 1); (1, 2); (2, 1); (3, 1); (4, 1); (5, 2); (6, 0); (7, 0); (8, 1);
+     ...] 
 
 
 

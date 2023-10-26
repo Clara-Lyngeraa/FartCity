@@ -169,18 +169,29 @@ FartCity exercise 6.5
    (2)
    > inferType (fromString "let f x = if x then true else false in f end");;
    val it : string = "(bool -> bool)"
+
+   fra forelæsning: 
+   "fun x -> x = true"
    
    > inferType (fromString "let f x = if x = 1 then 1 else 0 in f end");;
    val it : string = "(int -> int)"
-
+   fra forelæsning: 
+   "fun x -> x+1"
+   
    > inferType (fromString "let f x = let g y = if y + x = 1 then 1 else 0 in g end in f end");;
    val it : string = "(int -> (int -> int))"
+   fra forelæsning: 
+   "fun x -> fun y -> x + y"
 
    > inferType (fromString "let f x = let g y = x in g end in f end");;
    val it : string = "('h -> ('g -> 'h))"
+   fra forelæsning: 
+   ""
+
 
    > inferType (fromString "let f x = let g y = y in g end in f end");;
    val it : string = "('g -> ('h -> 'h))"
+
 
    inferType (fromString "let f x = let g y = let k z = y (x z) in k end in g end in f end");;
 
