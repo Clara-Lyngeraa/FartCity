@@ -351,3 +351,196 @@ val it : Machine.instr list =
 > java Machine ex8_3test.out 
 1 
 Ran 0.013 seconds
+
+Exercise 8.4 *********** I HAVE NO IDEA ****************
+open ParseAndComp;;
+> compileToFile (fromFile "ex8.c") "ex8.out";;
+val it : Machine.instr list =
+  [LDARGS; CALL (0, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 0; ADD;
+   CSTI 20000000; STI; INCSP -1; GOTO "L3"; Label "L2"; GETBP; CSTI 0; ADD;
+   GETBP; CSTI 0; ADD; LDI; CSTI 1; SUB; STI; INCSP -1; INCSP 0; Label "L3";
+   GETBP; CSTI 0; ADD; LDI; IFNZRO "L2"; INCSP -1; RET -1]
+
+> javac Machine.java
+> java Machine ex8.out
+Ran 0.658 seconds
+
+In comparison to: 
+(Prog1: 0 20000000 16 7 0 1 2 9 18 4 25)
+Or in symbolic code: 20000000; GOTO 7; 1; SUB; DUP; IFNZRO 4; STOP
+> java Machine prog1
+Ran 0.162 seconds
+
+In prog1 the address at the top of the stack is duplicated (the code at address 7 is DUP). 
+In ex8 we never duplicate. So eahc time we have to decrement i with 1, we nead to load what is at adress i twice
+each loop. Besides this, prog1 does not setup main, does not initialise a variable i and sets it to 20000000 and create 3 labels. 
+
+open ParseAndComp;;
+> compileToFile (fromFile "ex13.c") "ex13.out";;
+val it : Machine.instr list =
+  [LDARGS; CALL (1, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 1; ADD;
+   CSTI 1889; STI; INCSP -1; GOTO "L3"; Label "L2"; GETBP; CSTI 1; ADD; GETBP;
+   CSTI 1; ADD; LDI; CSTI 1; ADD; STI; INCSP -1; GETBP; CSTI 1; ADD; LDI;
+   CSTI 4; MOD; CSTI 0; EQ; IFZERO "L7"; GETBP; CSTI 1; ADD; LDI; CSTI 100;
+   MOD; CSTI 0; EQ; NOT; IFNZRO "L9"; GETBP; CSTI 1; ADD; LDI; CSTI 400; MOD;
+   CSTI 0; EQ; GOTO "L8"; Label "L9"; CSTI 1; Label "L8"; GOTO "L6";
+   Label "L7"; CSTI 0; Label "L6"; IFZERO "L4"; GETBP; CSTI 1; ADD; LDI;
+   PRINTI; INCSP -1; GOTO "L5"; Label "L4"; INCSP 0; Label "L5"; INCSP 0;
+   Label "L3"; GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD; LDI; LT;
+   IFNZRO "L2"; INCSP -1; RET 0]
+
+
+> javac Machine.java
+> java Machine ex13.out 2000
+1892 1896 1904 1908 1912 1916 1920 1924 1928 1932 1936 1940 1944 1948 1952 1956 1960 1964 1968 1972 1976 1980 1984 1988 1992 1996 2000 
+Ran 0.015 seconds
+
+Code in ex13.c:
+
+void main(int n) {
+  int y;
+  y = 1889;
+  while (y < n) {
+    y = y + 1;
+    if (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) 
+      print y;
+  }
+}
+
+Structured bytecode: 
+
+CALL (1, "L1"); 
+STOP; 
+INCSP 1;        | int y
+GETBP; 
+CSTI 1; 
+ADD;
+CSTI 1889;      
+STI;            | y = 1889
+INCSP -1; 
+GOTO "L3"; 
+
+Label "L2";
+GETBP; 
+CSTI 1;        
+ADD;            
+GETBP;
+CSTI 1; 
+ADD; 
+LDI; 
+CSTI 1; 
+ADD; 
+STI;            | y = y + 1
+INCSP -1; 
+
+GETBP; 
+CSTI 1; 
+ADD; 
+LDI;
+CSTI 4; 
+MOD; 
+CSTI 0; 
+EQ;             |
+IFZERO "L7";    | y % 4 == 0 
+
+GETBP; 
+CSTI 1; 
+ADD; 
+LDI; 
+CSTI 100;
+MOD; 
+CSTI 0; 
+EQ; 
+NOT; 
+IFNZRO "L9";  | y % 100 != 0 
+
+GETBP; 
+CSTI 1; 
+ADD; 
+LDI; 
+CSTI 400; 
+MOD;
+CSTI 0; 
+EQ;       | y % 400 == 0
+
+GOTO "L8"; 
+
+Label "L9"; 
+CSTI 1; 
+
+Label "L8"; 
+GOTO "L6";
+
+Label "L7"; 
+CSTI 0; 
+
+Label "L6"; 
+IFZERO "L4";   
+
+GETBP; 
+CSTI 1; 
+ADD; 
+LDI;
+PRINTI;     | print y
+INCSP -1; 
+GOTO "L5"; 
+
+Label "L4"; 
+INCSP 0; 
+
+Label "L5"; 
+INCSP 0;
+
+Label "L3";
+GETBP; 
+CSTI 1; 
+ADD; 
+LDI; 
+GETBP; 
+CSTI 0;         | y < n
+ADD; 
+LDI; 
+LT;
+IFNZRO "L2";    | if y < n go to L2 
+INCSP -1; 
+RET 0
+
+
+void main(int n) {
+  int y;
+  y = 1889;
+  while (y < n) {
+    y = y + 1;
+    if (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) 
+      print y;
+  }
+}
+
+
+&&
+IFZERO "L7";    | y % 4 == 0  jump to L7 if true
+Label "L7"; 
+CSTI 0;         | push 0 for true to the stack
+
+The second statement is logically skipped, but how do we see this? I cannot. 
+
+
+
+|| 
+IFNZRO "L9";  | y % 100 != 0 jump to L9 if not 0
+
+GETBP;                        |
+CSTI 1;                       |
+ADD;                          |
+LDI;                          |
+CSTI 400;                     | All this is skipped if first expression is true
+MOD;                          |
+CSTI 0;                       |
+EQ;       | y % 400 == 0      |
+
+GOTO "L8"; 
+
+Label "L9"; 
+CSTI 1; 
+
+So if the first expression in the || clause is true, the second one is just skipped. 
