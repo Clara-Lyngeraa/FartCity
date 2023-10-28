@@ -3,12 +3,12 @@ Fartcity assignment 07:
 
 our way of running:
 ./fsharp/fslex --unicode CLex.fsl     
-./fsharp/fsyacc --module CPar CPar.fsy    
-fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs ParseAndRun.fs
+./fsharp/fsyacc --module CPar CPar.fsy 
+fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Machine.fs Comp.fs ParseAndComp.fs   
 
 Exercise 8.1
 
-(i):
+(part i):
 open ParseAndComp;;
 > compileToFile (fromFile "ex11.c") "ex11.out";;
 val it : Machine.instr list =
@@ -130,7 +130,7 @@ gcc machine.c
 
 Ran 0.054 seconds
 
-(ii)
+(part ii)
 ./fsharp/fslex --unicode CLex.fsl     
 ./fsharp/fsyacc --module CPar CPar.fsy 
 fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Machine.fs Comp.fs ParseAndComp.fs   
@@ -322,5 +322,32 @@ Can be found in ex3trace.txt. *IS THIS ENOUGH??*
 Ran 0.095 seconds
 
 
+Exercise 8.3
+Updated files: CLex.fs, CPar.fsy, Absyn.fs, ex8_3test.c, comp.fs
 
+./fsharp/fslex --unicode CLex.fsl     
+./fsharp/fsyacc --module CPar CPar.fsy 
+fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Machine.fs Comp.fs ParseAndComp.fs   
 
+MicroC code in ex8_3test.c:
+
+void main()
+{
+    int t;
+    t = 0;
+    ++t;
+    print t;
+}
+
+open ParseAndComp;;
+> compileToFile (fromFile "ex8_3test.c") "ex8_3test.out";;
+val it : Machine.instr list =
+  [LDARGS; CALL (0, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 0; ADD;
+   CSTI 0; STI; INCSP -1; GETBP; CSTI 0; ADD; DUP; LDI; CSTI 1; ADD; STI;
+   INCSP -1; GETBP; CSTI 0; ADD; LDI; PRINTI; INCSP -1; INCSP -1; RET -1]
+
+! should be run outside of interactive !
+> javac Machine.java
+> java Machine ex8_3test.out 
+1 
+Ran 0.013 seconds

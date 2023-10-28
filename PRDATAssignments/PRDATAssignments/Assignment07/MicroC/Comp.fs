@@ -206,6 +206,20 @@ and cExpr (e : expr) (varEnv : varEnv) (funEnv : funEnv) : instr list =
       @ cExpr e2 varEnv funEnv
       @ [GOTO labend; Label labtrue; CSTI 1; Label labend]
     | Call(f, es) -> callfun f es varEnv funEnv
+    | PreDec acc -> 
+        cAccess acc varEnv funEnv 
+        @ [DUP] 
+        @ [LDI] //load what is at that address
+        @ [CSTI -1] //push constant 1
+        @ [ADD] // add whatever what at the address of i with the constant 1
+        @ [STI] //store indirect, so store i++ in i's address 
+    | PreInc acc -> 
+        cAccess acc varEnv funEnv 
+        @ [DUP] 
+        @ [LDI]
+        @ [CSTI 1]
+        @ [ADD] //add to the stack the address of i (the duplicated one)
+        @ [STI] //store indirect, so store i++ in i's address 
 
 (* Generate code to access variable, dereference pointer or index array.
    The effect of the compiled code is to leave an lvalue on the stack.   *)

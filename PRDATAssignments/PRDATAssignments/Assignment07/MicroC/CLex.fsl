@@ -77,6 +77,8 @@ rule Token = parse
   | "//"            { EndLineComment lexbuf; Token lexbuf }
   | "/*"            { Comment lexbuf; Token lexbuf }
   | '"'             { CSTSTRING (String [] lexbuf) }
+  | "--"            { DEC } (* Fartcity exercise 8.3 *)
+  | "++"            { INC } (* Fartcity exercise 8.3 *)
   | eof             { EOF }
   | _               { failwith "Lexer error: illegal symbol" }
 
