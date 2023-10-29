@@ -504,29 +504,51 @@ LT;
 IFNZRO "L2";    | if y < n go to L2 
 INCSP -1; 
 RET 0
-
-
-void main(int n) {
-  int y;
-  y = 1889;
-  while (y < n) {
-    y = y + 1;
-    if (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) 
-      print y;
-  }
-}
-
+_______________________________________________________________
 
 &&
-IFZERO "L7";    | y % 4 == 0  jump to L7 if true
+IFZERO "L7";    | y % 4 == 0  jump to L7 if false
 Label "L7"; 
 CSTI 0;         | push 0 for true to the stack
 
-The second statement is logically skipped, but how do we see this? I cannot. 
+The second statement is skipped if the first one is not true: 
+Since EQ evaluates to 1 if they are equal and 0 if not. 
+
+EQ;             |
+IFZERO "L7";    | y % 4 == 0 
+
+GETBP;                          |
+CSTI 1;                         |
+ADD;                            | 
+LDI;                            |
+CSTI 100;                       | 
+MOD;                            |   
+CSTI 0;                         | 
+EQ;                             |
+NOT;                            |
+IFNZRO "L9";  | y % 100 != 0    |
+GETBP;                          |     ALL THIS IS SKIPPED IF FIRST STATEMENT IS FALSE
+CSTI 1;                         |
+ADD;                            |
+LDI;                            |
+CSTI 400;                       |
+MOD;                            | 
+CSTI 0;                         |
+EQ;       | y % 400 == 0        |
+GOTO "L8";                      |
+Label "L9";                     |
+CSTI 1;                         |
+Label "L8";                     |
+GOTO "L6";                      |
+
+Label "L7";                           <-- we jump to here if false
+CSTI 0; 
 
 
+_______________________________________________________
 
 || 
+
 IFNZRO "L9";  | y % 100 != 0 jump to L9 if not 0
 
 GETBP;                        |
