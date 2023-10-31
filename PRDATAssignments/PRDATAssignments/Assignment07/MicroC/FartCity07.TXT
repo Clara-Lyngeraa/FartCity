@@ -578,5 +578,15 @@ Exercise 8.6:
 
 
 open ParseAndComp;;
+Updated files: CLex.fs, CPar.fsy, Absyn.fs, ex8_6test.c, comp.fs
+
+to CPar.fsy is added: 
+| SWITCH LPAR Expr RPAR LBRACE Case RBRACE { Switch($3, $6)  }
+
+Case:
+    CASE CSTINT COLON Block { [Case($2, $4)]}
+  | CASE CSTINT COLON Block Case { Case($2, $4) :: $5}
+;
+
 > compileToFile (fromFile "ex8_6test.c") "ex8_6test.out";;
 
