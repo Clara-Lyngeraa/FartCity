@@ -4,6 +4,8 @@ type token =
   | EOF
   | COLON
   | QUESTIONMARK
+  | SWITCH
+  | CASE
   | LPAR
   | RPAR
   | LBRACE
@@ -48,6 +50,8 @@ type tokenId =
     | TOKEN_EOF
     | TOKEN_COLON
     | TOKEN_QUESTIONMARK
+    | TOKEN_SWITCH
+    | TOKEN_CASE
     | TOKEN_LPAR
     | TOKEN_RPAR
     | TOKEN_LBRACE
@@ -104,6 +108,7 @@ type nonTerminalId =
     | NONTERM_StmtOrDecSeq
     | NONTERM_Stmt
     | NONTERM_StmtM
+    | NONTERM_Case
     | NONTERM_StmtU
     | NONTERM_Expr
     | NONTERM_ExprNotAccess

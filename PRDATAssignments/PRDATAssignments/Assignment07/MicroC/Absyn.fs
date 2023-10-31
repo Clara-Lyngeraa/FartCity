@@ -31,14 +31,19 @@ and access =
   | AccVar of string                 (* Variable access        x    *) 
   | AccDeref of expr                 (* Pointer dereferencing  *p   *)
   | AccIndex of access * expr        (* Array indexing         a[e] *)
-                                                                   
+
+and case =                           (* FartCity exercise 8.6 *)
+  | Case of int * stmt
+                                                            
 and stmt =                                                         
   | If of expr * stmt * stmt         (* Conditional                 *)
   | While of expr * stmt             (* While loop                  *)
   | Expr of expr                     (* Expression statement   e;   *)
   | Return of expr option            (* Return from method          *)
   | Block of stmtordec list          (* Block: grouping and scope   *)
-                                                                   
+  | Switch of expr * case list       (* Switch case FartCity exercise 8.6*)
+
+
 and stmtordec =                                                    
   | Dec of typ * string              (* Local variable declaration  *)
   | Stmt of stmt                     (* A statement                 *)

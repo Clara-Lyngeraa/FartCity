@@ -144,7 +144,28 @@ let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) : instr list =
       [RET (snd varEnv - 1)]
     | Return (Some e) -> 
       cExpr e varEnv funEnv @ [RET (snd varEnv)]
+    | Switch (e, cases) -> 
+          let labend = newLabel() //ending label
+          let valE = cExpr e varEnv funEnv //evaluate expression
+          let casesWithLabels = List.map(fun (Case(i, stm)) -> (i, stm, newLabel())) cases //labels for all cases
 
+          //find the case where the case int matches the evaluated expression
+          let instructionsList = 
+              List.fold(fun acc (i, stm, lab) ->
+              valE @ [LDI; CSTI i; EQ; IFNZRO lab] @ acc
+                ) [] casesWithLabels
+
+          //evaluate all statements in the cases, using the labels from casesWithLabels
+          let stmtsFromCases = List.fold(fun acc (i, stm, lab) -> 
+                                      let evalStm = cStmt stm varEnv funEnv
+                                      [Label lab]
+                                      @ evalStm 
+                                      @ [GOTO labend] //go to end after executing this statement 
+                                      @ acc
+                                      ) [] casesWithLabels
+
+          //combine instructions with the labels with statements and then end                           
+          instructionsList @ stmtsFromCases @ [Label labend]
 and cStmtOrDec stmtOrDec (varEnv : varEnv) (funEnv : funEnv) : varEnv * instr list = 
     match stmtOrDec with 
     | Stmt stmt    -> (varEnv, cStmt stmt varEnv funEnv) 

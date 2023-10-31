@@ -27,7 +27,9 @@ let keyword s =
     | "return"  -> RETURN
     | "true"    -> CSTBOOL 1
     | "void"    -> VOID 
-    | "while"   -> WHILE         
+    | "while"   -> WHILE  
+    | "switch"  -> SWITCH       (* FartCity exercise 8.6 *)
+    | "case"    -> CASE         (* FartCity exercise 8.6 *)
     | _         -> NAME s
  
 let cEscape s = 

@@ -573,3 +573,10 @@ Updated files: CLex.fs, CPar.fsy, Absyn.fs, ex8_5test.c, comp.fs
 
 open ParseAndComp;;
 > compileToFile (fromFile "ex8_5test.c") "ex8_5test.out";;
+
+Exercise 8.6:
+
+
+open ParseAndComp;;
+> compileToFile (fromFile "ex8_6test.c") "ex8_6test.out";;
+
