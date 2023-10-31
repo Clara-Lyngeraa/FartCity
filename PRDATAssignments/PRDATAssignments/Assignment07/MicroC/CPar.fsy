@@ -19,10 +19,12 @@ let nl = CstI 10
 %token EQ NE GT LT GE LE
 %token NOT SEQOR SEQAND
 %token INC DEC
-%token LPAR RPAR LBRACE RBRACE LBRACK RBRACK SEMI COMMA ASSIGN AMP
+%token LPAR RPAR LBRACE RBRACE LBRACK RBRACK SEMI COMMA ASSIGN AMP 
+%token COLON QUESTIONMARK
 %token EOF
 
 %right ASSIGN             /* lowest precedence */
+%right COLON QUESTIONMARK
 %nonassoc PRINT
 %left SEQOR
 %left SEQAND
@@ -136,6 +138,7 @@ ExprNotAccess:
   | Expr SEQOR  Expr                    { Orelse($1, $3)      }
   | INC Access                          { PreInc $2}
   | DEC Access                          { PreDec $2}
+  | LPAR Expr QUESTIONMARK Expr COLON Expr RPAR { Condition($2, $4, $6)} 
 ;
 
 AtExprNotAccess:

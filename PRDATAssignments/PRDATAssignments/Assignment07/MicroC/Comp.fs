@@ -205,25 +205,33 @@ and cExpr (e : expr) (varEnv : varEnv) (funEnv : funEnv) : instr list =
       @ [IFNZRO labtrue]
       @ cExpr e2 varEnv funEnv
       @ [GOTO labend; Label labtrue; CSTI 1; Label labend]
-    | Call(f, es) -> callfun f es varEnv funEnv
-    | PreDec acc -> 
+    | Call(f, es) -> callfun f es varEnv funEnv 
+    | PreDec acc ->  (*FartCity exercise 8.3*)
         cAccess acc varEnv funEnv 
         @ [DUP] 
         @ [LDI] //load what is at that address
         @ [CSTI -1] //push constant 1
         @ [ADD] // add whatever what at the address of i with the constant 1
         @ [STI] //store indirect, so store i++ in i's address 
-    | PreInc acc -> 
+    | PreInc acc ->  (*FartCity exercise 8.3*)
         cAccess acc varEnv funEnv 
         @ [DUP] 
         @ [LDI]
         @ [CSTI 1]
         @ [ADD] //add to the stack the address of i (the duplicated one)
-        @ [STI] //store indirect, so store i++ in i's address 
+        @ [STI] //store indirect, so store i++ in i's address
+     | Condition (e1, e2, e3) -> 
+        (* FartCity exercise 8.5 *)
+        let labelse = newLabel()
+        let labend  = newLabel()
+        cExpr e1 varEnv funEnv //evaluate e1
+        @ [IFZERO labelse]  //if e1 evaluates to false jump to else label
+        @ cExpr e2 varEnv funEnv @ [GOTO labend] //if e1 evalutes to true we continue here and jump to end
+        @ [Label labelse] @ cExpr e3 varEnv funEnv
+        @ [Label labend]  
 
 (* Generate code to access variable, dereference pointer or index array.
    The effect of the compiled code is to leave an lvalue on the stack.   *)
-
 and cAccess access varEnv funEnv : instr list =
     match access with 
     | AccVar x ->

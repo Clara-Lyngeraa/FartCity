@@ -566,3 +566,10 @@ Label "L9";
 CSTI 1; 
 
 So if the first expression in the || clause is true, the second one is just skipped. 
+
+
+Exercise 8.5:
+Updated files: CLex.fs, CPar.fsy, Absyn.fs, ex8_5test.c, comp.fs
+
+open ParseAndComp;;
+> compileToFile (fromFile "ex8_5test.c") "ex8_5test.out";;

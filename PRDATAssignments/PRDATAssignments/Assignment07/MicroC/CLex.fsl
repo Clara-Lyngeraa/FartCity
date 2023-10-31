@@ -79,6 +79,8 @@ rule Token = parse
   | '"'             { CSTSTRING (String [] lexbuf) }
   | "--"            { DEC } (* Fartcity exercise 8.3 *)
   | "++"            { INC } (* Fartcity exercise 8.3 *)
+  | ":"             { COLON } (* Fartcity exercise 8.5 *)
+  | "?"            { QUESTIONMARK } (* Fartcity exercise 8.5 *)
   | eof             { EOF }
   | _               { failwith "Lexer error: illegal symbol" }
 

@@ -25,7 +25,7 @@ and expr =
   | Call of string * expr list       (* Function call f(...)        *)
   | PreInc of access                 (* C/C++/Java/C# ++i or ++a[e] Fart city exercise 8.3 *)
   | PreDec of access                 (* C/C++/Java/C# --i or --a[e] Fart city exercise 8.3 *)
-  
+  | Condition of expr * expr * expr  (* Conditional if-statement of the form (e1 ? e2 : e3) FartCity exercise 8.5 *)
                                                                    
 and access =                                                       
   | AccVar of string                 (* Variable access        x    *) 
