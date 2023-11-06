@@ -1,0 +1,54 @@
+  public static void SelectionSort(int[]);
+    descriptor: ([I)V
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=4, locals=4, args_size=1
+         0: iconst_0            | Push int 0 to stack 
+         1: istore_1            | Stores top of stack (0) into local variable 1/i (i=0)
+         2: iload_1             | Load int into local variable 1 (i)
+         3: aload_0             | Reference to local variable 0 (arr)
+         4: arraylength         | Gets length of array
+         5: if_icmpge     57    | Compare greater than (i >= arr.Length) in code (i < arr.Length);
+         8: iload_1             | Load int into local variable 1/i 
+         9: istore_2            | Stores top of stack into local variable 2/least
+        10: iload_1             | Load int into local variable 1 (i = 0)
+        11: iconst_1            | Push int 1 to stack (1)
+        12: iadd                | Add the top two elements on stack(i+1)
+        13: istore_3            | Stores top of stack into local variable 3/j (j=i+1)
+        14: iload_3             | Load int into local variable 3 (j)
+        15: aload_0             | Reference to local variable 0 (arr)
+        16: arraylength         | Gets length of array
+        17: if_icmpge     37    | Compare greater than (j >= arr.Length) in code (j < arr.Length);
+
+        20: aload_0             | Reference to local variable 0 (arr)
+        21: iload_3             | Load int into local variable 3 (j)
+        22: iaload              | Load int from array (arr[j])
+        23: aload_0             | Reference to local variable 0 (arr)
+        24: iload_2             | Load int into local variable 2 (least)
+        25: iaload              | Load int from array (arr[least])
+        26: if_icmpge     31    | Compare greater than (arr[j] >= arr[least]) in code (arr[j] < arr[least])
+
+        29: iload_3             | Load int into local variable 3 (j)
+        30: istore_2            | Stores top of stack (j) into local variable 2/least (least = j)
+
+        31: iinc          3, 1  | Increment local variable 3/j with 1 (j++)
+        34: goto          14    | Back to 14
+
+        37: aload_0             | Reference to local variable 0 (arr) 
+        38: iload_1             | Load int into local variable 1 (i) 
+        39: iaload              | Load int from array (arr[i])
+        40: istore_3            | Stores top of stack into local variable 3/tmp (int tmp = arr[i])
+        41: aload_0             | Reference to local variable 0 (arr)
+        42: iload_1             | Load int into local variable 1 (i)
+        43: aload_0             | Reference to local variable 0 (arr) (arr[i])
+        44: iload_2             | Load int into local variable 2 (least)
+        45: iaload              | Load int from array (arr[least])
+        46: iastore             | Store into int array (arr[i] = arr[least])
+        47: aload_0             | Reference to local variable 0 (arr)
+        48: iload_2             | Load int into local variable 2 (least)
+        49: iload_3             | Load int into local variable 3 (tmp)
+        50: iastore             | Store into int array arr[least] = tmp
+        51: iinc          1, 1  | Increment local variable 1/i with 1 
+        54: goto          2     | Go to line 2
+        57: return              | Return 
+  
