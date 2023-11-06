@@ -31,7 +31,7 @@ let nl = CstI 10
 %left PLUS MINUS
 %left TIMES DIV MOD 
 %nonassoc NOT AMP 
-%nonassoc LBRACK          /* highest precedence  */
+%nonassoc LBRACK PreInc PreDec        /* highest precedence  */
 
 %start Main
 %type <Absyn.program> Main 
