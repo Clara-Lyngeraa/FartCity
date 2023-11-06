@@ -87,7 +87,8 @@ class SentinelLockQueue implements Queue {
   }
 
   private final Node dummy = new Node(-444, null);
-  private Node head = dummy, tail = dummy;
+  private Node head = dummy;
+  private Node tail = dummy;
   
   public synchronized boolean put(int item) {
     Node node = new Node(item, null);
@@ -101,6 +102,7 @@ class SentinelLockQueue implements Queue {
       return -999;
     Node first = head;
     head = first.next;
+    first.next = null; // Disconnect the removed node from the queue
     return head.item;
   }
 }
