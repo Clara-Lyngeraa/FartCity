@@ -555,3 +555,52 @@ int main(int argc, char** argv) {
     return execute(argc, argv, trace);
   }
 }
+
+void collect(int s[], int sp) {
+    markPhase(s, sp);
+    sweepPhase();
+}
+
+void markPhase( int s[], int sp) {
+  int count; count=0;
+
+  for (int i = 0; i <= sp; i++){
+    if (inHeap((word *)s[i]))
+    {
+      mark((word *)s[i]);
+    }
+  }
+}
+
+
+void mark(word* block) {
+  if (inHeap(block)) {
+    block[0] = Paint(block[0],White);
+    int i;
+    for (i = 1 ; i<= Length(block[0]) ; i++)
+    {
+      mark((word*)block[i]);
+    }
+  }
+}
+
+void sweepPhase(){
+  word *block  = heap;
+
+  while (block < afterHeap) 
+  {
+    if (Color(block[0]) == White)
+    {
+      block[0] = Paint(block[0], Blue);
+      block[1] = (word) freelist;
+      freelist = block;
+      
+    }
+    if (Color(block[0]) == Black)
+    {
+      block[0] = Paint(block[0], White);
+    }
+    block = block + Length(block[0]) + 1;
+  }
+}
+
