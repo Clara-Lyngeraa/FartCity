@@ -471,15 +471,63 @@ void initheap() {
   freelist = &heap[0];
 }
 
-void markPhase(word s[], word sp) {
-  printf("marking ...\n");
-  // TODO: Actually mark something
+
+
+void mark(word p[]) {
+  // Check if the object is Grey before marking it as Black
+  if (inHeap(p) && Color(p[0]) == Grey) {
+    p[0] = Paint(p[0], Black);
+
+    // Recursively mark referenced objects
+    int i;
+    for (i = 1; i <= Length(p[0]); i++) {
+      mark((word *)p[i]);
+    }
+  }
 }
 
-void sweepPhase() {
-  printf("sweeping ...\n");
-  // TODO: Actually sweep
+void markPhase(word s[], word sp) {
+  printf("marking ...\n");
+  for (int i = 0; i <= sp; i++) {
+    if (!IsInt(s[i])) {
+      mark((word *)s[i]);
+    }
+  }
 }
+
+
+void sweepPhase() {
+  word *p = heap;
+  word *prev = NULL;
+
+  while (p < afterHeap) {
+    if (Color(p[0]) == White) {
+      int l = Length(p[0]);
+      while (l > 0 && Color(p[l + 1]) == White) {
+        l += Length(p[l + 1]);
+      }
+
+      if (l > 0) {
+        // Set this block to Blue and add it to the freelist
+        p[0] = mkheader(BlockTag(p[0]), l, Blue);
+        p[1] = (word)freelist;
+        freelist = p;
+      } else {
+        // Orphaned block
+        p[0] = mkheader(0, 0, Blue);
+        if (prev) {
+          prev[1] = (word)p;
+        }
+      }
+      prev = p;
+    } else {
+      prev = p;
+    }
+
+    p += Length(p[0]) + 1;
+  }
+}
+
 
 void collect(word s[], word sp) {
   markPhase(s, sp);
@@ -521,6 +569,7 @@ word* allocate(unsigned int tag, uword length, word s[], word sp) {
   exit(1);
 }
 
+
 // Read code from file and execute it
 
 int main(int argc, char** argv) {
@@ -555,52 +604,3 @@ int main(int argc, char** argv) {
     return execute(argc, argv, trace);
   }
 }
-
-void collect(int s[], int sp) {
-    markPhase(s, sp);
-    sweepPhase();
-}
-
-void markPhase( int s[], int sp) {
-  int count; count=0;
-
-  for (int i = 0; i <= sp; i++){
-    if (inHeap((word *)s[i]))
-    {
-      mark((word *)s[i]);
-    }
-  }
-}
-
-
-void mark(word* block) {
-  if (inHeap(block)) {
-    block[0] = Paint(block[0],White);
-    int i;
-    for (i = 1 ; i<= Length(block[0]) ; i++)
-    {
-      mark((word*)block[i]);
-    }
-  }
-}
-
-void sweepPhase(){
-  word *block  = heap;
-
-  while (block < afterHeap) 
-  {
-    if (Color(block[0]) == White)
-    {
-      block[0] = Paint(block[0], Blue);
-      block[1] = (word) freelist;
-      freelist = block;
-      
-    }
-    if (Color(block[0]) == Black)
-    {
-      block[0] = Paint(block[0], White);
-    }
-    block = block + Length(block[0]) + 1;
-  }
-}
-
