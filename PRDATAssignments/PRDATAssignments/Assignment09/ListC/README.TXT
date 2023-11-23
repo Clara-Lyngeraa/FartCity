@@ -86,7 +86,7 @@ total 40
 ...  15879 Oct 27 10:44 listmachine.c
 ...    816 Oct 27 10:44 utils_unix.c
 ...    965 Oct 27 10:44 utils_win.c
-$ gcc -o listmachine listmachine.c 
+$ gcc -o listmachine ListVM/ListVM/listmachine.c 
 $ ll
 ...
 ...  17840 Oct 27 10:54 listmachine
@@ -109,6 +109,6 @@ How to run:
    fsharpc --standalone -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Machine.fs Comp.fs ListCC.fs -o listcc.exe
    mono listcc.exe ex30.lc
    
-   ListVM/ListVM/listmachine ex30.out 1000
+   ./listmachine ex30.out 1000
 
  
