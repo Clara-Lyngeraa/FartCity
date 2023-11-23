@@ -628,7 +628,6 @@ void mark(word p[])
   if (Color(p[0]) == White)
   {
     p[0] = Paint(p[0], Black);
-    printf("BLOCK MARKED\n");
     // Recursively mark referenced objects
     int i;
     for (i = 1; i <= Length(p[0]); i++)
@@ -643,26 +642,17 @@ void mark(word p[])
 
 void markPhase(word s[], word sp)
 {
-  printf("called markphase");
-
-  printf("marking ...\n");
-  // printf("printing sp" WORD_FMT, sp);
   for (int i = 0; i <= sp; i++)
   {
-    printf("here!");
-
     if (!IsInt(s[i]) && s[i] != NULL)
     {
       mark(s[i]);
     }
   }
-
-  printf("YOOOOOO");
 }
 
 void sweepPhase()
 {
-  printf("in sweepphase");
   word *p = heap;
 
   while (p < afterHeap)
@@ -671,29 +661,28 @@ void sweepPhase()
     {
       break;
     }
-    
+
     if (Color(p[0]) == White)
     {
-      // p[0] = Paint(p[0], Blue);
-      // p[1] = (word)freelist;
-      // freelist = p;
-      // if (Color(p[0]) == Black)
-      // {
-      //   p[0] = Paint(p[0], White);
-      // }
-      p += Length(p[0]) + 1;
+      p[0] = Paint(p[0], Blue);
+      p[1] = (word)freelist;
+      freelist = p;
+      if (Color(p[0]) == Black)
+      {
+        p[0] = Paint(p[0], White);
+      }
     }
+    word *next = p + Length(p[0]) + 1;
+    p = next;
   }
-
-  printf("end of sweepphase");
 }
 
 void collect(word s[], word sp)
 {
   markPhase(s, sp);
-  heapStatistics();
+  // heapStatistics();
   sweepPhase();
-  heapStatistics();
+  // heapStatistics();
 }
 
 word *allocate(unsigned int tag, uword length, word s[], word sp)
