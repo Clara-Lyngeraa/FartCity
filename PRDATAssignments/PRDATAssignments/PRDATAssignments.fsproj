@@ -8,6 +8,9 @@
     <PackageReference Include="FsLexYacc.Runtime" Version="11.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assignment11/MicroC/Machine.fs" />
+    <Compile Include="Assignment11/MicroC/Absyn.fs" />
+    <Compile Include="Assignment11/MicroC/Contcomp.fs" />
     <Compile Include="Assignment07/MicroC/Absyn.fs" />
     <Compile Include="Assignment07/MicroC/Parse.fs" />
     <Compile Include="Assignment07/MicroC/Interp.fs" />
