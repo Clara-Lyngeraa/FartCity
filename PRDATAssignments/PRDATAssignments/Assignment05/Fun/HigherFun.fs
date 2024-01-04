@@ -73,6 +73,13 @@ let rec eval (e : expr) (env : value env) : value =
       | _ -> failwith "eval Call: not a function"
     | Fun (s, expr) -> 
       Clos(s, expr, env)
+    | InCheck (e,e1,e2) ->
+      let evale = eval e env
+      let evale1 = eval e1 env
+      let evale2 = eval e2 env
+      if evale1 <= evale && evale<=evale2
+      then Int 1
+      else Int 0
     ;;
 
 (* Evaluate in empty environment: program must have no free variables: *)

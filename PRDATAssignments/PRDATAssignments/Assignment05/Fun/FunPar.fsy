@@ -16,12 +16,12 @@
 %token EQ NE GT LT GE LE ARROW
 %token LPAR RPAR 
 %token EOF
-
+%token LBRACK RBRACK COMMA WITHN
 
 %left ELSE
 %right ARROW /* Right-associative operator */
 %left EQ NE
-%left GT LT GE LE
+%left GT LT GE LE WITHIN
 %left PLUS MINUS
 %left TIMES DIV MOD
 %left IF
@@ -54,6 +54,7 @@ Expr:
   | Expr GE    Expr                     { Prim(">=", $1, $3)     }
   | Expr LE    Expr                     { Prim("<=", $1, $3)     }
   | FUN NAME ARROW Expr                 { Fun($2, $4)     }
+  | Expr WITHN LBRACK Expr COMMA Expr RBRACK { InCheck($1,$4,$6)}
 ;
 
 AtExpr:

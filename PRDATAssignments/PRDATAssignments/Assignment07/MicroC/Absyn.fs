@@ -42,7 +42,7 @@ and stmt =
   | Return of expr option            (* Return from method          *)
   | Block of stmtordec list          (* Block: grouping and scope   *)
   | Switch of expr * case list       (* Switch case FartCity exercise 8.6*)
-
+  | PrintCurFrame 
 
 and stmtordec =                                                    
   | Dec of typ * string              (* Local variable declaration  *)
@@ -54,3 +54,17 @@ and topdec =
 
 and program = 
   | Prog of topdec list
+
+(* Exam Dec 2019 *)
+
+let int2String (x: int) = string x
+
+let rec ppTyp t =
+  match t with
+  | TypI -> "int"
+  | TypC -> "char"
+  | TypA (t1, io) -> 
+    match io with
+      | Some s -> "(" + ppTyp t1 + "[" + (int2String s) + "])"
+      | None -> "(" + ppTyp t1 + "[])"
+  | TypP t1 -> "(*" + ppTyp t1 + ")"

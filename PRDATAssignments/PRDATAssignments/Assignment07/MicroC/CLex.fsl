@@ -30,6 +30,7 @@ let keyword s =
     | "while"   -> WHILE  
     | "switch"  -> SWITCH       (* FartCity exercise 8.6 *)
     | "case"    -> CASE         (* FartCity exercise 8.6 *)
+    | "printCurrFrame" -> PRINTCURRENTFRAME
     | _         -> NAME s
  
 let cEscape s = 

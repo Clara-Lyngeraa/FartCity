@@ -12,3 +12,4 @@ type expr =
   | Fun of string * expr
   | Letfun of string * string * expr * expr    (* (f, x, fBody, letBody) *)
   | Call of expr * expr
+  | InCheck of expr * expr * expr   // raoo

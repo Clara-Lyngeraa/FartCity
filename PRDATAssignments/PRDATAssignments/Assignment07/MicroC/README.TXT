@@ -3,13 +3,58 @@ Compiling and loading the micro-C evaluator and parser (MicroC/README.TXT)
 
 Archive microc.zip contains the files used in points A, B and C below.
 
+EXAM DEC 2019
+
+   ./fsharp/fslex --unicode CLex.fsl
+   ./fsharp/fsyacc --module CPar CPar.fsy
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs Machine.fs ParseAndRun.fs Comp.fs ParseAndComp.fs   
+
+
+Examples exe 2:
+
+   ppTyp (TypP(TypA(TypI, None)));;
+   ppTyp (TypP(TypA(TypP TypI, Some 3)));;
+   ppTyp (TypP (TypP(TypA(TypP TypI, None))));;
+   ppTyp (TypP (TypA( (TypP(TypA(TypP TypI, None))),Some 3)));;
+
+
+Examples exe 3:
+
+   ppVar (Glovar 47);;
+   ppVar (Glovar 3);;
+   ppVar (Locvar 13);;
+
+
+Examples exe 4:
+
+      open Absyn;;
+      open Comp;;
+
+      ppVarTyp ("a",(Locvar 11, TypA (TypI, Some 3)));;
+      ppVarTyp ("g",(Glovar 0, TypI));;
+
+      ppVarTyp ("z",(Locvar 11, TypA (TypI, None)));;
+      ppVarTyp ("q",(Glovar 47, TypP (TypI)));;
+
+Examples exe 5:
+      open Absyn;;
+      open Comp;;
+      let exVarEnv : varEnv =
+         ([("a", (Locvar 6, TypA (TypI,Some 2)));
+            ("pn", (Locvar 3, TypA (TypP TypI,Some 1)));
+            ("p", (Locvar 1, TypP TypI));
+            ("n", (Locvar 0, TypI));
+            ("g", (Glovar 0, TypI))], 7);;
+
+
+      ppVarEnv exVarEnv;;
 
 A. Generating and compiling the lexer and parser for micro-C, and
    loading the interpreter for micro-C.
 
-   fslex --unicode CLex.fsl
-   fsyacc --module CPar CPar.fsy
-   fsharpi -r ~/fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs ParseAndRun.fs
+   ./fsharp/fslex --unicode CLex.fsl
+   ./fsharp/fsyacc --module CPar CPar.fsy
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs ParseAndRun.fs
 
    open ParseAndRun;;
    fromFile "ex1.c";;

@@ -5,9 +5,29 @@ The items A to C are similar to the code found under folder Fun handed
 out last week. In this week we extend with higher order functions,
 items D-E and type interence, item F.
 
+
+EXAM DEC 2019:
+
+   ./fsharp/fsyacc --module FunPar FunPar.fsy
+   ./fsharp/fslex --unicode FunLex.fsl
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs HigherFun.fs ParseAndRunHigher.fs
+
+
+Examples:
+
+   open Absyn;;
+   InCheck(Var "x", Prim("+",CstI 2, CstI 3), CstI 40);;
+
+   open ParseAndRunHigher;;
+   fromString @"let x = 23 in x within [2+3,40] end";;
+
+   run (fromString @"let x = 23 in x within [2+3,40] end");;
+
+
+
 A. Loading the micro-ML evaluator, with abstract syntax only
 
-   fsharpi Absyn.fs Fun.fs
+   fsharpi Absyn.fs Fun.fs 
 
    open Absyn;;
    open Fun;;
@@ -17,8 +37,8 @@ A. Loading the micro-ML evaluator, with abstract syntax only
 
 B. Generating and compiling the lexer and parser, and loading them:
 
-   fsyacc --module FunPar FunPar.fsy
-   fslex --unicode FunLex.fsl
+   .fsharp/fsyacc --module FunPar FunPar.fsy
+   .fsharp/fslex --unicode FunLex.fsl
    fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs   
 
    open Parse;;

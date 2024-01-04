@@ -38,6 +38,7 @@ open Machine
 
 (* ------------------------------------------------------------------- *)
 
+
 (* Simple environment operations *)
 
 type 'data env = (string * 'data) list
@@ -114,6 +115,39 @@ let makeGlobalEnvs (topdecs : topdec list) : varEnv * funEnv * instr list =
    * funEnv  is the global function environment
 *)
 
+(* Exam December 2019*)
+
+let ppVar v =
+  match v with
+  | Glovar g -> "Global[" + (Absyn.int2String g) + "]"
+  | Locvar l -> "bp[" + (Absyn.int2String l) + "]"
+  ;;
+
+  let ppVarTyp (s, (v, t)) =
+    match t with
+    | TypI -> (string s) + ":int at " + ppVar v
+    | TypC -> (string s) + ":char at " + ppVar v
+    | TypA (t1, io) -> 
+        match io with
+        | Some n -> (string s) + ":(" + ppTyp t1 + "[" + (string n) +  "]) at " + ppVar v
+        | None ->  (string s) + ":(" + ppTyp t1 + "[]) at " + ppVar v
+    | TypP t1 -> (string s) + ":(*" + ppTyp t1 + ") at " + ppVar v
+    ;;
+
+let ppVarEnv (lst : varEnv) =
+  List.fold (fun acc x  -> ppVarTyp x :: acc  ) [] (fst lst);;
+
+
+
+let printVarEnv varEnv =
+        List.iter (printf "\n%s") (ppVarEnv varEnv);
+        printf "\n"
+    ;;
+
+
+(* Exam 2019 December stop *)
+
+
 let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) : instr list = 
     match stmt with
     | If(e, stmt1, stmt2) -> 
@@ -133,7 +167,9 @@ let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) : instr list =
     | Block stmts -> 
       let rec loop stmts varEnv =
           match stmts with 
-          | []     -> (snd varEnv, [])
+          | []     -> 
+            printVarEnv varEnv
+            (snd varEnv, [])
           | s1::sr -> 
             let (varEnv1, code1) = cStmtOrDec s1 varEnv funEnv
             let (fdepthr, coder) = loop sr varEnv1 
@@ -315,3 +351,4 @@ let compileToFile program fname =
     instrs
 
 (* Example programs are found in the files ex1.c, ex2.c, etc *)
+
