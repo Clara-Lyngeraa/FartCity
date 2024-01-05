@@ -23,6 +23,7 @@ let nl = CstI 10
 %token COLON QUESTIONMARK SWITCH CASE
 %token EOF
 %token PRINTCURRENTFRAME
+%token BREAK
 
 %right ASSIGN             /* lowest precedence */
 %right COLON QUESTIONMARK
@@ -105,7 +106,8 @@ StmtM:  /* No unbalanced if-else */
   | IF LPAR Expr RPAR StmtM ELSE StmtM  { If($3, $5, $7)       }
   | WHILE LPAR Expr RPAR StmtM          { While($3, $5)        }
   | SWITCH LPAR Expr RPAR LBRACE Case RBRACE { Switch($3, $6)  }
-  | PRINTCURRENTFRAME SEMI {printCurrFrame}
+  | PRINTCURRENTFRAME SEMI {PrintCurFrame}
+  | BREAK Expr SEMI {Break $2}        //exam jan 2019
 ;
 
 Case:

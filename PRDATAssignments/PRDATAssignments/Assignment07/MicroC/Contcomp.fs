@@ -212,6 +212,10 @@ let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) (C : instr list) : instr 
           | (BDec code,  varEnv) :: sr -> code @ pass2 sr C
           | (BStmt stmt, varEnv) :: sr -> cStmt stmt varEnv funEnv (pass2 sr C)
       pass2 stmtsback (addINCSP(snd varEnv - fdepthend) C) (* Remove variables, declared in the block, from the stack *)
+    | Break e -> (* Exam jan 2019 *)
+      let (labNoKeyPress,C1) = addLabel C
+      cExpr e varEnv funEnv
+        (BREAK :: IFZERO labNoKeyPress :: WAITKEYPRESS :: C1)
     | Return None -> 
       RET (snd varEnv - 1) :: deadcode C
     | Return (Some e) -> 

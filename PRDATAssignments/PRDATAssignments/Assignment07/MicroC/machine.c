@@ -49,7 +49,10 @@
 #define PRINTI 22
 #define PRINTC 23
 #define LDARGS 24
-#define STOP 25
+#define STOP 25  
+#define BREAK 26  //Exam jan 2019
+#define WAITKEYPRESS 27  //Exam jan 2019
+
 
 #define STACKSIZE 1000
   
@@ -58,6 +61,8 @@
 void printInstruction(int p[], int pc) {
   switch (p[pc]) {
   case CSTI:   printf("CSTI %d", p[pc+1]); break;
+  case BREAK:   printf("BREAK"); break; //exam jan 2019
+  case WAITKEYPRESS: printf("WAITKEYPRESS"); break; //exam jan 2019
   case ADD:    printf("ADD"); break;
   case SUB:    printf("SUB"); break;
   case MUL:    printf("MUL"); break;
@@ -133,6 +138,16 @@ int execcode(int p[], int s[], int iargs[], int iargc, int /* boolean */ trace) 
     switch (p[pc++]) {
     case CSTI:
       s[sp+1] = p[pc++]; sp++; break;
+    
+    case BREAK: { /* Exam */
+      printStackAndPc(s, bp, sp, p, pc);
+      break;
+    }
+    case WAITKEYPRESS: { /* Exam */
+      printf("Press ENTER to Continue\n");
+      system("read");  /* Wait for any key press - Mac and Linux. */
+    } break;
+
     case ADD: 
       s[sp-1] = s[sp-1] + s[sp]; sp--; break;
     case SUB: 

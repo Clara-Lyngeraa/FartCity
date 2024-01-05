@@ -32,6 +32,8 @@ let keyword s =
     | "true"  -> CSTBOOL true
     | "fun"   -> FUN
     | "within" -> WITHN (* Exam *)
+    | "field" -> FIELD (* Exam *)
+    | "record" -> RECORD (* Exam *)
     | _       -> NAME s
 }
 
@@ -62,6 +64,10 @@ rule Token = parse
   | '[' {LBRACK}  // EXAM
   | ']' {RBRACK}  // EXAM
   | ',' {COMMA}   // EXAM
+  | '.' {DOT}     // EXAM
+  | '{'             { LTUBRACK }
+  | '}'             { RTUBRACK }
+  | ';'             { SEMICOLON }
   | _               { failwith "Lexer error: illegal symbol" }
 
 and SkipComment = parse

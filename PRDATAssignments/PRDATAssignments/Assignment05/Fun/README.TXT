@@ -6,6 +6,15 @@ out last week. In this week we extend with higher order functions,
 items D-E and type interence, item F.
 
 
+EXAM JAN 2019:
+
+
+
+exercise 2:
+
+run (fromString @"let x = { } in x end");;
+
+
 EXAM DEC 2019:
 
    ./fsharp/fsyacc --module FunPar FunPar.fsy

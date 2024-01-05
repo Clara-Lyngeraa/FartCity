@@ -35,6 +35,9 @@ type expr =
   | And of expr * expr
   | Or  of expr * expr
   | Seq of expr * expr
+  | Find of string * string //raoo exam jan 2019
+  | Bang of string
+  | BangN of string * int
   | Every of expr 
   | Fail;;
 
@@ -89,6 +92,45 @@ let rec eval (e : expr) (cont : cont) (econt : econt) =
               | _ -> Str "unknown prim2")
               econt1)
           econt
+    | Find(pat, str) -> 
+    if pat = "" || str = "" then
+        failwith "Empty strings are not allowed in Find"
+    else
+        let rec findSubstring (startPos: int) =
+            match str.IndexOf(pat, startPos) with
+            | -1 -> econt ()
+            | index ->
+                cont (Int index) (fun () -> findSubstring (index + 1))
+        findSubstring 0
+    
+    
+    | Bang(s) -> //Exam jan 2018
+      if s = "" then
+          failwith "Empty string not allowed in Bang"
+      else
+          let rec printChars index =
+              if index < String.length s then
+                  let charToPrint = s.[index]
+                  cont (Str (string charToPrint)) (fun () -> printChars (index + 1))
+              else
+                  econt ()
+          printChars 0
+    | BangN(s, n) -> //exam jan 2018
+      if s = "" then
+          failwith "Empty string not allowed in BangN"
+      else if n < 1 then
+          econt ()
+      else
+          let rec printChars index repeatCount =
+              if index < String.length s then
+                  let charToPrint = s.[index]
+                  cont (Str (string charToPrint)) (fun () -> printChars (index + 1) repeatCount)
+              else if repeatCount > 1 then
+                  printChars 0 (repeatCount - 1)
+              else
+                  econt ()
+          printChars 0 n
+
     | Prim1(str, ex) -> //fartCity exercise 11.8
       eval ex (fun v1 -> fun econt1 ->
           match (str, v1) with
@@ -115,6 +157,7 @@ let rec eval (e : expr) (cont : cont) (econt : econt) =
       eval e (fun _ -> fun econt1 -> econt1 ())
              (fun () -> cont (Int 0) econt)
     | Fail -> econt ()
+  
 
 let run e = eval e (fun v -> fun _ -> v) (fun () -> (printfn "Failed"; Int 0));
 
@@ -157,3 +200,26 @@ let ex9 = Every(Write(Prim("<", CstI 4, FromTo(1, 10))));
 let ex10 = Every(Write(Prim1("square", FromTo(3,6))));
 let ex11: expr = Every(Write(Prim1("even", FromTo(1,7))));
 let ex12: expr = Every(Write(Prim1("multiples", CstI 3)));;
+
+
+
+
+
+(* Exam jan 2019 *)
+
+let str = "Hi there - if there are anyone listening, just anyone, please answer me then" ;;
+// Print all indexes of "e"
+let ex5a = Every(Write(Find("e", str)));;
+
+// Print indexes of "e" greater than 10
+let exFindEGreaterThan10 = Every (Write (Prim("<", CstI 10, Find("e", "Hi there - if there are anyone"))));;
+
+
+//Exam Januar 2018
+ let iconEx1Answer = Every(Write(And(FromTo(1, 2), FromTo(3,4))));;
+ let iconEx2Answer = Every(Write(Or(Or(Or(CstS "I", CstS "c"), CstS "o"), CstS "n")))
+
+let iconBangExample = Every(Write(Bang "Icon"));;
+
+
+

@@ -43,6 +43,8 @@ and stmt =
   | Block of stmtordec list          (* Block: grouping and scope   *)
   | Switch of expr * case list       (* Switch case FartCity exercise 8.6*)
   | PrintCurFrame 
+  | Break of expr
+  | WaitKeyPress
 
 and stmtordec =                                                    
   | Dec of typ * string              (* Local variable declaration  *)

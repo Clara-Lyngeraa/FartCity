@@ -3,6 +3,21 @@ Compiling and loading the micro-C evaluator and parser (MicroC/README.TXT)
 
 Archive microc.zip contains the files used in points A, B and C below.
 
+
+EXAM JAN 2019
+
+   ./fsharp/fslex --unicode CLex.fsl
+   ./fsharp/fsyacc --module CPar CPar.fsy
+   fsharpi -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Interp.fs Machine.fs ParseAndRun.fs Comp.fs ParseAndComp.fs Contcomp.fs ParseAndContcomp.fs
+            ||
+      fsharpc --standalone -r ./fsharp/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Machine.fs Contcomp.fs MicroCC.fs -o microcc.exe
+
+   gcc machine.c
+   ./a.out ex11.out 8
+   
+   mono microcc.exe ex1.c
+   ./machine ex1.out 3
+
 EXAM DEC 2019
 
    ./fsharp/fslex --unicode CLex.fsl

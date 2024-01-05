@@ -31,6 +31,7 @@ type value =
   | Int of int
   | Closure of string * string * expr * value env       (* (f, x, fBody, fDeclEnv) *)
   | Clos of string * expr * value env                   (* (x, body, declEnv) *)
+  | RecordV of (string * value) list
 
 let rec eval (e : expr) (env : value env) : value =
     match e with
@@ -73,6 +74,8 @@ let rec eval (e : expr) (env : value env) : value =
       | _ -> failwith "eval Call: not a function"
     | Fun (s, expr) -> 
       Clos(s, expr, env)
+      
+      //exam dec 2019
     | InCheck (e,e1,e2) ->
       let evale = eval e env
       let evale1 = eval e1 env
@@ -80,6 +83,24 @@ let rec eval (e : expr) (env : value env) : value =
       if evale1 <= evale && evale<=evale2
       then Int 1
       else Int 0
+
+      //exam jan 2019
+    | Record xs ->
+        let rec aux acc xs =
+          match xs with
+          | y :: ys ->
+            let evaly = (fst y), eval (snd y) env
+            aux (evaly :: acc) ys
+          | [] -> RecordV(List.rev acc)
+        aux [] xs
+    | Field(e,s) -> (* Exam *)
+               match eval e env with
+                 RecordV xs -> match List.tryFind (fun (s,_) -> s=s) xs with
+                                 None -> failwith ("Field " + s + " not found")
+                               | Some (_,v) -> v
+               | _ -> failwith ("Expression Field - expecting a record.")
+
+
     ;;
 
 (* Evaluate in empty environment: program must have no free variables: *)

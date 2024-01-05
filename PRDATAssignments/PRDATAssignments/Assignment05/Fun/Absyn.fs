@@ -12,4 +12,6 @@ type expr =
   | Fun of string * expr
   | Letfun of string * string * expr * expr    (* (f, x, fBody, letBody) *)
   | Call of expr * expr
-  | InCheck of expr * expr * expr   // raoo
+  | InCheck of expr * expr * expr   // raoo exam dec-2019
+  | Field of expr * string // raoo exam jan-2019
+  | Record of (string * expr) list // raoo exam jan-2019

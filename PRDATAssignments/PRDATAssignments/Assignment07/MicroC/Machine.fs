@@ -15,7 +15,9 @@ type label = string
 
 type instr =
   | Label of label                     (* symbolic label; pseudo-instruc. *)
-  | CSTI of int                        (* constant                        *)
+  | CSTI of int                        (* constant                        *)                     (* constant                        *)
+  | BREAK                              (* Exam jan 2019                        *)
+  | WAITKEYPRESS                       (* Exam jan 2019                        *)
   | ADD                                (* addition                        *)
   | SUB                                (* subtraction                     *)
   | MUL                                (* multiplication                  *)
@@ -91,6 +93,8 @@ let CODEPRINTI = 22
 let CODEPRINTC = 23
 let CODELDARGS = 24
 let CODESTOP   = 25;
+let CODEBREAK   = 26;
+let CODEWAITKEYPRESS   = 27;
 
 (* Bytecode emission, first pass: build environment that maps 
    each label to an integer address in the bytecode.
@@ -125,6 +129,8 @@ let makelabenv (addr, labenv) instr =
     | PRINTC         -> (addr+1, labenv)
     | LDARGS         -> (addr+1, labenv)
     | STOP           -> (addr+1, labenv)
+    | BREAK           -> (addr+1, labenv)
+    | WAITKEYPRESS           -> (addr+1, labenv)
 
 (* Bytecode emission, second pass: output bytecode as integers *)
 
@@ -157,6 +163,8 @@ let rec emitints getlab instr ints =
     | PRINTC         -> CODEPRINTC :: ints
     | LDARGS         -> CODELDARGS :: ints
     | STOP           -> CODESTOP   :: ints
+    | BREAK           -> CODEBREAK   :: ints
+    | WAITKEYPRESS           -> CODEWAITKEYPRESS   :: ints
 
 (* Convert instruction list to int list in two passes:
    Pass 1: build label environment
