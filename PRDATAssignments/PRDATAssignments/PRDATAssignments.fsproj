@@ -8,6 +8,39 @@
     <PackageReference Include="FsLexYacc.Runtime" Version="11.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exam2021/Fun/Absyn.fs" />
+    <Compile Include="Exam2021/Fun/Fun.fs" />
+    <Compile Include="Exam2021/Fun/FunLex.fs" />
+    <Compile Include="Exam2021/Fun/FunPar.fsi" />
+    <Compile Include="Exam2021/Fun/FunPar.fs" />
+    <Compile Include="Exam2021/Fun/Parse.fs" />
+    <Compile Include="Exam2021/Fun/HigherFun.fs" />
+    <Compile Include="Exam2021/Fun/TypeInference.fs" />
+    <Compile Include="Exam2021/Fun/ParseAndRunHigher.fs" />
+    <Compile Include="Exam2021/Fun/ParseAndType.fs" />
+    <Compile Include="Exam2021/Fun/slowTypeInference.fsx" />
+    <Compile Include="Exam2021/ListC/Absyn.fs" />
+    <Compile Include="Exam2021/ListC/Parse.fs" />
+    <Compile Include="Exam2021/ListC/Interp.fs" />
+    <Compile Include="Exam2021/ListC/Machine.fs" />
+    <Compile Include="Exam2021/ListC/Comp.fs" />
+    <Compile Include="Exam2021/MicroC/Absyn.fs" />
+    <Compile Include="Exam2021/MicroC/Parse.fs" />
+    <Compile Include="Exam2021/MicroC/Interp.fs" />
+    <Compile Include="Exam2021/MicroC/Machine.fs" />
+    <Compile Include="Exam2021/MicroC/Comp.fs" />
+    <Compile Include="Exam2019_jan/Fun/Absyn.fs" />
+    <Compile Include="Exam2019_jan/Fun/Fun.fs" />
+    <Compile Include="Exam2019_jan/Fun/FunLex.fs" />
+    <Compile Include="Exam2019_jan/Fun/FunPar.fsi" />
+    <Compile Include="Exam2019_jan/Fun/FunPar.fs" />
+    <Compile Include="Exam2019_jan/Fun/Parse.fs" />
+    <Compile Include="Exam2019_jan/Fun/HigherFun.fs" />
+    <Compile Include="Exam2019_jan/Fun/TypeInference.fs" />
+    <Compile Include="Exam2019_jan/Fun/ParseAndRunHigher.fs" />
+    <Compile Include="Exam2019_jan/Fun/ParseAndType.fs" />
+    <Compile Include="Exam2019_jan/Fun/slowTypeInference.fsx" />
+    <Compile Include="Exam2019_jan/Cont/Icon.fs" />
     <Compile Include="Assignment10/Cont/Icon.fs" />
     <Compile Include="Assignment10/Cont/Exercise11_1.fs" />
     <Compile Include="Assignment11/MicroC/Machine.fs" />

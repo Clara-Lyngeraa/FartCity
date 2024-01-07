@@ -12,6 +12,7 @@ A. Loading the micro-ML evaluator, with abstract syntax only
    open Absyn;;
    open Fun;;
    let res = run (Prim("+", CstI 5, CstI 7));;
+   let exam01 = Letfun("f1", "x", Prim("+", Var "x", CstD 1.0),all(Var "f1", CstD 12.0));;
    #q;;
 
 
@@ -60,7 +61,7 @@ E. Using the lexer, parser and higher-order evaluator together:
 
    fsyacc --module FunPar FunPar.fsy
    fslex --unicode FunLex.fsl
-   fsharpi -r ~/fsharp/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs HigherFun.fs ParseAndRunHigher.fs
+   fsharpi -r ./fsharp/FsLexYFacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs HigherFun.fs ParseAndRunHigher.fs
 
    Our way of running
    ./fsharp/fsyacc --module FunPar FunPar.fsy
